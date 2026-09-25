@@ -1,0 +1,3260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="page-meta-title">SMMA India | Find the Best Social Media Agency in Your City</title>
+  <meta id="page-meta-desc" name="description" content="Verified directory of the best social media marketing agencies (SMMAs) across top Indian cities. Compare pricing, reviews, and get free quotes.">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a', /* Deep Blue Accent */
+              950: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar & micro-interactions */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .badge-verified { background: linear-gradient(135deg, #1e3a8a, #2563eb); }
+    .badge-featured { background: linear-gradient(135deg, #b45309, #d97706); }
+    .hero-pattern {
+      background-color: #ffffff;
+      background-image: radial-gradient(#1e3a8a 0.6px, transparent 0.6px), radial-gradient(#1e3a8a 0.6px, #ffffff 0.6px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      opacity: 0.96;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-100 selection:text-brand-900">
+
+  <!-- Header / Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#home" onclick="navigateTo('home');" class="flex items-center gap-2 group">
+        <div class="w-9 h-9 rounded-lg bg-brand-900 flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:bg-brand-800 transition">
+          S
+        </div>
+        <div class="flex flex-col">
+          <span class="font-display font-extrabold text-xl tracking-tight text-brand-900 leading-none">SMMA <span class="text-brand-600">India</span></span>
+          <span class="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Top Agencies Directory</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-700">
+        <a href="#home" onclick="navigateTo('home')" class="hover:text-brand-900 transition">Home</a>
+        <div class="relative group">
+          <button class="flex items-center gap-1 hover:text-brand-900 transition py-2">
+            <span>Cities</span>
+            <svg class="w-4 h-4 text-slate-400 group-hover:text-brand-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div class="absolute left-0 mt-0 w-52 bg-white rounded-xl shadow-xl border border-slate-100 py-2 hidden group-hover:block z-50">
+            <div id="nav-cities-dropdown" class="max-h-72 overflow-y-auto">
+              <!-- Injected dynamically -->
+            </div>
+          </div>
+        </div>
+        <a href="#compare" onclick="navigateTo('compare')" class="hover:text-brand-900 flex items-center gap-1 transition">
+          Compare
+          <span id="compare-count-badge" class="hidden px-1.5 py-0.2 bg-brand-100 text-brand-800 text-[10px] font-bold rounded-full">0</span>
+        </a>
+        <a href="#about" onclick="navigateTo('about')" class="hover:text-brand-900 transition">About</a>
+      </nav>
+
+      <!-- Right CTAs -->
+      <div class="flex items-center gap-3">
+        <!-- Supabase Status Pill -->
+        <button onclick="openSupabaseModal()" title="Supabase Database Status & Setup" class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full border border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 transition">
+          <span id="backend-status-indicator" class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span id="backend-status-text" class="font-mono text-[11px]">Mumbai DB Ready</span>
+        </button>
+
+        <a href="#list-agency" onclick="navigateTo('list-agency')" class="bg-brand-900 hover:bg-brand-800 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-lg shadow-sm transition inline-flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>List Your Agency</span>
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileNav()" class="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Flyout -->
+    <div id="mobile-nav" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-lg">
+      <a href="#home" onclick="navigateTo('home'); toggleMobileNav();" class="block font-medium text-slate-800 py-1">Home</a>
+      <div class="text-xs font-semibold uppercase text-slate-400 pt-2">Cities</div>
+      <div id="mobile-cities-links" class="grid grid-cols-2 gap-2 text-sm"></div>
+      <div class="border-t border-slate-100 pt-3">
+        <a href="#compare" onclick="navigateTo('compare'); toggleMobileNav();" class="block font-medium text-slate-800 py-1">Compare Agencies</a>
+        <a href="#about" onclick="navigateTo('about'); toggleMobileNav();" class="block font-medium text-slate-800 py-1">About SMMA India</a>
+        <button onclick="openSupabaseModal(); toggleMobileNav();" class="mt-2 text-xs text-brand-700 font-semibold underline block">View Supabase SQL & Backend Config</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Toast Alert Component (No window.alert) -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none"></div>
+
+  <!-- MAIN APP CONTAINER -->
+  <main class="flex-grow">
+
+    <!-- ========================================== -->
+    <!-- 1. HOME VIEW                               -->
+    <!-- ========================================== -->
+    <section id="view-home" class="page-view">
+      <!-- Hero Section -->
+      <div class="relative bg-white border-b border-slate-200 overflow-hidden">
+        <div class="absolute inset-0 hero-pattern pointer-events-none opacity-40"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 text-center">
+          
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-brand-50 border border-brand-200 text-brand-900 text-xs sm:text-sm font-semibold mb-6">
+            <span class="flex h-2 w-2 rounded-full bg-brand-600"></span>
+            India's #1 Dedicated Social Media Agency Marketplace
+          </div>
+
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold font-display text-slate-950 tracking-tight max-w-4xl mx-auto leading-tight sm:leading-none">
+            Find the Best <span class="text-brand-900 underline decoration-brand-500/40 decoration-wavy decoration-2">Social Media Agency</span> in Your City
+          </h1>
+          
+          <p class="mt-4 sm:mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto">
+            Discover verified Instagram, Reels, Paid Ads, and Influencer growth agencies vetted for real ROI, transparent pricing, and client satisfaction.
+          </p>
+
+          <!-- Search Widget -->
+          <div class="mt-8 max-w-3xl mx-auto bg-white p-3 sm:p-4 rounded-2xl shadow-xl shadow-slate-200/80 border border-slate-200">
+            <form onsubmit="handleHeroSearch(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-center">
+              
+              <!-- State Dropdown -->
+              <div class="sm:col-span-5 text-left">
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1">State</label>
+                <div class="relative">
+                  <select id="hero-state-select" onchange="onHeroStateChange()" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-medium rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:bg-white transition cursor-pointer appearance-none">
+                    <option value="">All States</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- City Dropdown -->
+              <div class="sm:col-span-5 text-left">
+                <label class="block text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-1 ml-1">City</label>
+                <div class="relative">
+                  <select id="hero-city-select" class="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-medium rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-brand-900 focus:bg-white transition cursor-pointer appearance-none">
+                    <option value="">Select a City</option>
+                  </select>
+                  <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="sm:col-span-2 pt-2 sm:pt-5">
+                <button type="submit" class="w-full bg-brand-900 hover:bg-brand-800 text-white font-semibold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                  <span class="sm:hidden">Find</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Quick badges -->
+          <div class="mt-6 flex flex-wrap items-center justify-center gap-y-2 gap-x-6 text-xs text-slate-500">
+            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> 100% Free Quotes</span>
+            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Direct WhatsApp Contact</span>
+            <span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg> Vetted Performance Scoring</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Popular Cities Section (8 Launch Cities) -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900">Explore by City</h2>
+            <p class="text-sm text-slate-600 mt-1">Browse top-rated social media agencies in India's leading economic and creative hubs.</p>
+          </div>
+          <span class="text-xs font-semibold text-brand-900 bg-brand-50 px-3 py-1 rounded-full mt-3 md:mt-0 w-max border border-brand-200">8 Launch Cities Active</span>
+        </div>
+
+        <div id="home-cities-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+
+      <!-- Featured Agencies Section -->
+      <section class="bg-slate-100/70 border-y border-slate-200 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-8">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">Featured Spotlight</span>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900 mt-1">Top Recommended Agencies</h2>
+              <p class="text-sm text-slate-600">High-growth agencies verified for client excellence and portfolio impact.</p>
+            </div>
+          </div>
+
+          <div id="home-featured-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section (3-Step) -->
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-900">How SMMA India Works</h2>
+        <p class="text-slate-600 mt-2 max-w-xl mx-auto text-sm sm:text-base">We eliminate the guesswork in hiring social media teams for D2C brands, local clinics, restaurants, and startups.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+          <!-- Step 1 -->
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative group hover:border-brand-900 hover:shadow-md transition">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 text-brand-900 font-bold text-xl flex items-center justify-center mb-5 group-hover:bg-brand-900 group-hover:text-white transition">1</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Search by City</h3>
+            <p class="text-sm text-slate-600">Filter agencies near you by services (Reels, Paid Ads, SEO), budget ranges, and client industries.</p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative group hover:border-brand-900 hover:shadow-md transition">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 text-brand-900 font-bold text-xl flex items-center justify-center mb-5 group-hover:bg-brand-900 group-hover:text-white transition">2</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Compare & Vet</h3>
+            <p class="text-sm text-slate-600">Evaluate side-by-side using our transparent 100-point algorithm, real client reviews, and verified badges.</p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm relative group hover:border-brand-900 hover:shadow-md transition">
+            <div class="w-12 h-12 mx-auto rounded-xl bg-brand-50 text-brand-900 font-bold text-xl flex items-center justify-center mb-5 group-hover:bg-brand-900 group-hover:text-white transition">3</div>
+            <h3 class="text-lg font-bold text-slate-900 mb-2">Get Free Quote</h3>
+            <p class="text-sm text-slate-600">Submit an instant enquiry or initiate direct 1-on-1 WhatsApp consultations with agency founders.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA Banner -->
+      <section class="bg-brand-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 class="text-2xl font-bold font-display">Are you a Social Media Marketing Agency in India?</h3>
+            <p class="text-brand-200 text-sm mt-1">Get listed today to receive qualified business leads from top founders and local businesses.</p>
+          </div>
+          <a href="#list-agency" onclick="navigateTo('list-agency')" class="bg-white text-brand-900 hover:bg-slate-100 font-bold px-6 py-3 rounded-xl shadow-md transition whitespace-nowrap">
+            List Your Agency for Free
+          </a>
+        </div>
+      </section>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 2. CITY LISTING VIEW                       -->
+    <!-- ========================================== -->
+    <section id="view-city-listing" class="page-view hidden">
+      <div class="bg-white border-b border-slate-200 py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Breadcrumb -->
+          <nav class="flex items-center text-xs text-slate-500 gap-2 mb-2">
+            <a href="#home" onclick="navigateTo('home')" class="hover:underline">Home</a>
+            <span>/</span>
+            <span id="listing-breadcrumb-state" class="text-slate-600">State</span>
+            <span>/</span>
+            <span id="listing-breadcrumb-city" class="font-semibold text-brand-900">City</span>
+          </nav>
+          
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 id="city-listing-heading" class="text-2xl sm:text-4xl font-extrabold font-display text-slate-950">
+                Best Social Media Agencies in <span id="city-listing-city-name" class="text-brand-900">Mumbai</span>
+              </h1>
+              <p id="city-listing-subheading" class="text-slate-600 text-xs sm:text-sm mt-1">
+                Handpicked, verified SMMAs ranked by client satisfaction, portfolio quality, and performance score.
+              </p>
+            </div>
+
+            <!-- Mobile Filter Trigger Button -->
+            <button onclick="toggleMobileFilterDrawer(true)" class="lg:hidden flex items-center justify-center gap-2 bg-slate-900 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
+              <span>Filters & Sort</span>
+              <span id="mobile-filter-badge" class="bg-brand-500 text-white text-[10px] px-1.5 rounded-full hidden">0</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8 items-start">
+          
+          <!-- FILTERS SIDEBAR (Desktop) -->
+          <aside id="filters-sidebar" class="hidden lg:block w-72 shrink-0 bg-white p-5 rounded-2xl border border-slate-200 shadow-sm sticky top-24">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <h2 class="font-bold text-slate-900 text-base flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                Filters
+              </h2>
+              <button onclick="resetFilters()" class="text-xs text-brand-700 hover:text-brand-900 font-semibold">Reset all</button>
+            </div>
+
+            <!-- State & City Switcher -->
+            <div class="space-y-3 mb-5">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">State</label>
+                <select id="filter-state" onchange="onFilterStateChange()" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">City</label>
+                <select id="filter-city" onchange="onFilterCityChange()" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900"></select>
+              </div>
+            </div>
+
+            <!-- Max Starting Budget Slider -->
+            <div class="mb-5 pb-5 border-b border-slate-100">
+              <div class="flex items-center justify-between mb-2">
+                <label class="text-xs font-semibold text-slate-700">Max Starting Price</label>
+                <span id="price-slider-label" class="text-xs font-bold text-brand-900">Up to ₹1,50,000</span>
+              </div>
+              <input type="range" id="filter-price-range" min="10000" max="150000" step="5000" value="150000" oninput="onFilterPriceChange(this.value)" class="w-full accent-brand-900 cursor-pointer">
+              <div class="flex justify-between text-[10px] text-slate-400 mt-1 font-mono">
+                <span>₹10K</span>
+                <span>₹75K</span>
+                <span>₹1.5L+</span>
+              </div>
+            </div>
+
+            <!-- Rating Filter -->
+            <div class="mb-5 pb-5 border-b border-slate-100">
+              <label class="block text-xs font-semibold text-slate-700 mb-2">Minimum Rating</label>
+              <div class="space-y-1.5 text-xs text-slate-700">
+                <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                  <input type="checkbox" name="rating-filter" value="4.5" onchange="applyFilters()" class="rounded border-slate-300 text-brand-900 focus:ring-brand-900">
+                  <span class="flex items-center gap-1 text-amber-500 font-semibold">4.5+ ★★★★★ <span class="text-slate-400 text-[11px] font-normal">(Top Tier)</span></span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                  <input type="checkbox" name="rating-filter" value="4.0" onchange="applyFilters()" class="rounded border-slate-300 text-brand-900 focus:ring-brand-900">
+                  <span class="flex items-center gap-1 text-amber-500 font-semibold">4.0+ ★★★★☆</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+                  <input type="checkbox" name="rating-filter" value="3.0" onchange="applyFilters()" class="rounded border-slate-300 text-brand-900 focus:ring-brand-900">
+                  <span class="flex items-center gap-1 text-amber-500 font-semibold">3.0+ ★★★☆☆</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Verified Only -->
+            <div class="mb-5 pb-5 border-b border-slate-100">
+              <label class="flex items-center gap-2.5 cursor-pointer">
+                <input type="checkbox" id="filter-verified" onchange="applyFilters()" class="rounded border-slate-300 text-brand-900 focus:ring-brand-900 w-4 h-4">
+                <span class="text-xs font-semibold text-slate-800">Verified Agencies Only</span>
+              </label>
+            </div>
+
+            <!-- Services Filter -->
+            <div class="mb-2">
+              <label class="block text-xs font-semibold text-slate-700 mb-2">Services Offered</label>
+              <div id="filter-services-list" class="space-y-2 text-xs text-slate-600 max-h-48 overflow-y-auto pr-1">
+                <!-- Dynamically generated from services list -->
+              </div>
+            </div>
+          </aside>
+
+          <!-- LISTING CONTENT AREA -->
+          <div class="flex-1 w-full">
+            <!-- Sorting & Result count bar -->
+            <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-3 mb-6">
+              <div class="text-xs sm:text-sm text-slate-600 w-full sm:w-auto">
+                Showing <span id="filtered-agency-count" class="font-bold text-slate-900">0</span> agencies in <span id="filtered-city-label" class="font-semibold text-brand-900">Mumbai</span>
+              </div>
+
+              <!-- Sort Dropdown -->
+              <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+                <label for="sort-dropdown" class="text-xs font-medium text-slate-500 whitespace-nowrap">Sort by:</label>
+                <select id="sort-dropdown" onchange="applyFilters()" class="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg p-2 focus:ring-2 focus:ring-brand-900">
+                  <option value="rank">Recommended (Rank Score)</option>
+                  <option value="rating">Highest Rating</option>
+                  <option value="reviews">Most Reviews</option>
+                  <option value="price-asc">Starting Price: Low to High</option>
+                  <option value="price-desc">Starting Price: High to Low</option>
+                  <option value="newest">Newest Founded</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- FEATURED / SPONSORED SECTION (Clear visually separated section) -->
+            <div id="listing-featured-wrapper" class="hidden mb-8">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-0.5 rounded text-[11px] font-bold uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300">Featured Placement</span>
+                <span class="text-xs text-slate-500">Hand-curated top partner agencies</span>
+              </div>
+              <div id="listing-featured-container" class="space-y-4">
+                <!-- Featured agency cards -->
+              </div>
+            </div>
+
+            <!-- RANKED RESULTS LIST -->
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500">All Ranked Agencies</h3>
+              </div>
+              <div id="listing-results-container" class="space-y-4">
+                <!-- Dynamically populated agency list cards -->
+              </div>
+            </div>
+
+            <!-- Empty State -->
+            <div id="listing-empty-state" class="hidden bg-white p-12 text-center rounded-2xl border border-slate-200">
+              <div class="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+              </div>
+              <h3 class="text-base font-bold text-slate-800">No agencies match your criteria</h3>
+              <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">Try resetting some filters or increasing your starting budget range.</p>
+              <button onclick="resetFilters()" class="mt-4 px-4 py-2 bg-brand-900 text-white rounded-lg text-xs font-semibold">Reset Filters</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Filter Drawer (Modal Overlay) -->
+      <div id="mobile-filter-drawer" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex justify-end">
+        <div class="w-full max-w-md bg-white h-full overflow-y-auto p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+              <h3 class="text-lg font-bold text-slate-900">Filters</h3>
+              <button onclick="toggleMobileFilterDrawer(false)" class="p-2 text-slate-400 hover:text-slate-600">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            
+            <div id="mobile-filter-content">
+              <!-- Replicated dynamic controls -->
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-slate-100 mt-6 flex gap-3">
+            <button onclick="resetFilters(); toggleMobileFilterDrawer(false);" class="flex-1 py-3 text-xs font-bold text-slate-700 bg-slate-100 rounded-xl">Reset</button>
+            <button onclick="toggleMobileFilterDrawer(false);" class="flex-1 py-3 text-xs font-bold text-white bg-brand-900 rounded-xl">Show Results</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 3. AGENCY PROFILE VIEW                     -->
+    <!-- ========================================== -->
+    <section id="view-agency-profile" class="page-view hidden">
+      <!-- Agency Header Banner -->
+      <div class="bg-white border-b border-slate-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <!-- Back Link -->
+          <button onclick="goBackToCity()" class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-900 hover:underline mb-4">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            <span id="profile-back-label">Back to city listing</span>
+          </button>
+
+          <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <!-- Left Info -->
+            <div class="flex items-start gap-4">
+              <img id="profile-logo" src="" alt="Agency Logo" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border border-slate-200 shadow-sm shrink-0 bg-slate-50" onerror="this.src='https://placehold.co/120x120/1e3a8a/ffffff?text=SMMA'">
+              <div>
+                <div class="flex flex-wrap items-center gap-2">
+                  <h1 id="profile-name" class="text-2xl sm:text-3xl font-extrabold font-display text-slate-950">Agency Name</h1>
+                  <span id="profile-verified-badge" class="badge-verified text-white text-[11px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    Verified SMMA
+                  </span>
+                  <span id="profile-featured-badge" class="badge-featured text-white text-[11px] font-bold px-2 py-0.5 rounded-full hidden">
+                    Featured
+                  </span>
+                </div>
+                
+                <p id="profile-tagline" class="text-sm text-slate-600 mt-1 max-w-xl">Tagline here</p>
+
+                <!-- Metrics bar -->
+                <div class="flex flex-wrap items-center gap-4 text-xs text-slate-600 mt-3">
+                  <div class="flex items-center gap-1">
+                    <span class="text-amber-500 font-bold text-sm">★</span>
+                    <span id="profile-rating" class="font-bold text-slate-900">4.8</span>
+                    <span id="profile-reviews-count" class="text-slate-400">(24 reviews)</span>
+                  </div>
+                  <span>•</span>
+                  <div class="flex items-center gap-1">
+                    <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                    <span id="profile-location">Mumbai, Maharashtra</span>
+                  </div>
+                  <span>•</span>
+                  <div>Team: <span id="profile-team-size" class="font-semibold text-slate-900">10-25</span></div>
+                  <span>•</span>
+                  <div>Founded: <span id="profile-founded" class="font-semibold text-slate-900">2020</span></div>
+                  <span>•</span>
+                  <div class="bg-blue-50 text-brand-900 font-mono font-semibold px-2 py-0.5 rounded border border-blue-200">
+                    Rank Score: <span id="profile-rank-score">88</span>/100
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Link Buttons (Website, Instagram, WhatsApp, LinkedIn) -->
+            <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+              <a id="profile-website-btn" href="#" target="_blank" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg transition border border-slate-200">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                <span>Website</span>
+              </a>
+              <a id="profile-instagram-btn" href="#" target="_blank" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-pink-50 hover:bg-pink-100 text-pink-700 text-xs font-semibold rounded-lg transition border border-pink-200">
+                <span>Instagram</span>
+              </a>
+              <a id="profile-linkedin-btn" href="#" target="_blank" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg transition border border-blue-200">
+                <span>LinkedIn</span>
+              </a>
+              <a id="profile-whatsapp-btn" href="#" target="_blank" class="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg transition shadow-sm">
+                <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.301-.15-1.776-.876-2.05-.975-.276-.1-.477-.15-.678.15-.202.3-.778.976-.954 1.176-.176.2-.352.226-.653.076-.3-.15-1.267-.467-2.413-1.49a8.97 8.97 0 01-1.668-2.072c-.176-.3-.018-.463.132-.613.136-.134.3-.35.45-.525.152-.176.202-.3.303-.5.1-.2.05-.376-.025-.526-.075-.15-.678-1.636-.93-2.242-.244-.59-.493-.51-.678-.52l-.578-.01c-.2 0-.527.075-.803.376s-1.054 1.03-1.054 2.513c0 1.482 1.08 2.915 1.23 3.116.15.2 2.124 3.243 5.147 4.549.719.31 1.281.496 1.718.636.723.23 1.381.198 1.902.12.58-.088 1.777-.726 2.028-1.43.25-.703.25-1.306.175-1.431-.075-.125-.276-.2-.577-.35zM12.04 2C6.516 2 2.028 6.488 2.028 12.012c0 1.986.58 3.844 1.583 5.422L2 22l4.707-1.545a9.96 9.96 0 005.333 1.557c5.523 0 10.012-4.488 10.012-10.012 0-5.524-4.489-10.012-10.012-10.012z"></path></svg>
+                <span>WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Columns -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- LEFT COLUMN (About, Services, Pricing, Portfolio, Reviews) -->
+          <div class="lg:col-span-8 space-y-8">
+            
+            <!-- About Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h2 class="text-lg font-bold text-slate-900 mb-3">About the Agency</h2>
+              <p id="profile-description" class="text-sm text-slate-600 leading-relaxed whitespace-pre-line"></p>
+              
+              <div class="mt-6 pt-6 border-t border-slate-100 grid grid-cols-2 sm:grid-cols-3 gap-4 text-xs">
+                <div>
+                  <span class="text-slate-400 block font-medium">Headquarters</span>
+                  <span id="profile-address" class="font-semibold text-slate-800"></span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Languages</span>
+                  <span id="profile-languages" class="font-semibold text-slate-800">English, Hindi</span>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-medium">Starting Retainer</span>
+                  <span id="profile-price-highlight" class="font-semibold text-brand-900"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Services List -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h2 class="text-lg font-bold text-slate-900 mb-3">Core Services & Capabilities</h2>
+              <div id="profile-services-chips" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Industries Served -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <h2 class="text-lg font-bold text-slate-900 mb-3">Industries Specialization</h2>
+              <div id="profile-industries-chips" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Portfolio Section (Placeholder Gallery) -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-bold text-slate-900">Client Portfolio & Creative Work</h2>
+                <span class="text-xs text-slate-400">Sample Campaign Previews</span>
+              </div>
+              
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex flex-col justify-end p-4">
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                  <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-300">Reels Campaign</span>
+                    <h4 class="text-xs font-semibold text-white">Viral D2C Product Launch (2.4M Views)</h4>
+                  </div>
+                </div>
+                <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex flex-col justify-end p-4">
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                  <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-300">Paid Meta Ads</span>
+                    <h4 class="text-xs font-semibold text-white">4.8x ROAS Scaling for Fashion Brand</h4>
+                  </div>
+                </div>
+                <div class="group relative rounded-xl overflow-hidden border border-slate-200 bg-slate-100 aspect-video flex flex-col justify-end p-4">
+                  <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+                  <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-wider text-brand-300">Brand Identity</span>
+                    <h4 class="text-xs font-semibold text-white">Complete Aesthetic Overhaul for Clinic Chain</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews List Section -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+              <div class="flex items-center justify-between mb-6">
+                <div>
+                  <h2 class="text-lg font-bold text-slate-900">Client Reviews</h2>
+                  <p class="text-xs text-slate-500">Verified feedback from brands and founders who hired this SMMA.</p>
+                </div>
+                <button onclick="openReviewModal()" class="text-xs font-bold text-brand-900 bg-brand-50 hover:bg-brand-100 border border-brand-200 px-3 py-1.5 rounded-lg transition">
+                  Write a Review
+                </button>
+              </div>
+
+              <div id="profile-reviews-list" class="space-y-4">
+                <!-- Dynamically populated reviews -->
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: GET FREE QUOTE FORM -->
+          <div class="lg:col-span-4 sticky top-24">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-xl relative overflow-hidden">
+              <div class="h-1.5 w-full bg-brand-900 absolute top-0 left-0"></div>
+              
+              <h3 class="text-lg font-bold font-display text-slate-900">Get a Free Custom Quote</h3>
+              <p class="text-xs text-slate-500 mt-1 mb-5">Fill in your requirements and the agency's leadership team will reach out within 24 hours.</p>
+
+              <form id="lead-quote-form" onsubmit="handleLeadSubmit(event)" class="space-y-3">
+                <input type="hidden" id="lead-agency-id" value="">
+                
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Your Name *</label>
+                  <input type="text" id="lead-name" required placeholder="e.g. Rahul Sharma" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Phone / WhatsApp Number *</label>
+                  <input type="tel" id="lead-phone" required placeholder="+91 98765 43210" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Work Email</label>
+                  <input type="email" id="lead-email" placeholder="rahul@company.com" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Business Type</label>
+                  <select id="lead-business-type" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                    <option value="D2C / E-commerce">D2C / E-commerce</option>
+                    <option value="Restaurant / Cafe">Restaurant / Cafe</option>
+                    <option value="Clinic / Healthcare">Clinic / Healthcare</option>
+                    <option value="Real Estate">Real Estate</option>
+                    <option value="Education / EdTech">Education / EdTech</option>
+                    <option value="Fashion / Retail">Fashion / Retail</option>
+                    <option value="B2B / SaaS">B2B / SaaS</option>
+                    <option value="Other">Other Business</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Monthly Marketing Budget</label>
+                  <select id="lead-budget" class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                    <option value="₹25,000 - ₹50,000">₹25,000 - ₹50,000 / mo</option>
+                    <option value="₹50,000 - ₹1,00,000">₹50,000 - ₹1,00,000 / mo</option>
+                    <option value="₹1,00,000 - ₹2,50,000">₹1,00,000 - ₹2,50,000 / mo</option>
+                    <option value="₹2,50,000+">₹2,50,000+ / mo</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Project Details or Goal</label>
+                  <textarea id="lead-message" rows="3" placeholder="Tell them what you need (e.g., 15 Reels/mo + Meta Ads setup)..." class="w-full text-xs font-medium bg-slate-50 border border-slate-200 rounded-lg p-2.5 focus:ring-2 focus:ring-brand-900 focus:bg-white"></textarea>
+                </div>
+
+                <button type="submit" id="lead-submit-btn" class="w-full py-3 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs rounded-xl shadow-md transition mt-2 flex items-center justify-center gap-1.5">
+                  <span>Send Enquiry to Agency</span>
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+              </form>
+
+              <div class="mt-4 pt-4 border-t border-slate-100 flex items-center gap-2 text-[11px] text-slate-400">
+                <svg class="w-3.5 h-3.5 text-emerald-600 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                <span>Zero spam. Enquiries are sent directly to this agency's leads inbox.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- SIMILAR AGENCIES BOTTOM SECTION -->
+        <div class="mt-16 pt-12 border-t border-slate-200">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-xl font-bold font-display text-slate-900">Similar Agencies in <span id="similar-agencies-city-label">Mumbai</span></h3>
+            <button onclick="goBackToCity()" class="text-xs font-bold text-brand-900 hover:underline">View All in City →</button>
+          </div>
+          <div id="profile-similar-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Dynamically populated 3 cards -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 4. LIST YOUR AGENCY VIEW                   -->
+    <!-- ========================================== -->
+    <section id="view-list-agency" class="page-view hidden">
+      <div class="bg-white border-b border-slate-200 py-10">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-brand-50 text-brand-900 border border-brand-200">Agency Partner Portal</span>
+          <h1 class="text-3xl sm:text-4xl font-extrabold font-display text-slate-950 mt-3">List Your Agency on SMMA India</h1>
+          <p class="text-slate-600 text-sm mt-2">Join India's dedicated marketplace for social media marketing agencies. Submit your details for editorial review and approval.</p>
+        </div>
+      </div>
+
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="bg-white p-6 sm:p-8 rounded-2xl border border-slate-200 shadow-sm">
+          <form onsubmit="handleListAgencySubmit(event)" class="space-y-6">
+            
+            <!-- Basic Details -->
+            <div class="border-b border-slate-100 pb-6">
+              <h3 class="text-base font-bold text-slate-900 mb-4">1. General Information</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Agency Name *</label>
+                  <input type="text" id="reg-name" required placeholder="e.g. BlueWave Digital Media" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Tagline (One-line pitch) *</label>
+                  <input type="text" id="reg-tagline" required placeholder="e.g. Scaling D2C brands to 8-figures through viral TikTok & Reels" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-brand-900 focus:bg-white">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">State *</label>
+                  <select id="reg-state" onchange="onRegStateChange()" required class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-brand-900"></select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">City *</label>
+                  <select id="reg-city" required class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3 focus:ring-2 focus:ring-brand-900"></select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Office Address</label>
+                  <input type="text" id="reg-address" placeholder="e.g. 402 Lotus Grand, Andheri West" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+              </div>
+            </div>
+
+            <!-- Online Presence & Contacts -->
+            <div class="border-b border-slate-100 pb-6">
+              <h3 class="text-base font-bold text-slate-900 mb-4">2. Online Presence & Contact</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Website URL *</label>
+                  <input type="url" id="reg-website" required placeholder="https://agency.in" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Instagram Profile URL *</label>
+                  <input type="url" id="reg-instagram" required placeholder="https://instagram.com/agency" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">WhatsApp Business Phone *</label>
+                  <input type="tel" id="reg-whatsapp" required placeholder="919876543210" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Business Contact Email *</label>
+                  <input type="email" id="reg-email" required placeholder="hello@agency.in" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+              </div>
+            </div>
+
+            <!-- Operations & Pricing -->
+            <div class="border-b border-slate-100 pb-6">
+              <h3 class="text-base font-bold text-slate-900 mb-4">3. Operations & Pricing</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Starting Price (₹ / mo) *</label>
+                  <input type="number" id="reg-price-min" required placeholder="25000" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Team Size</label>
+                  <select id="reg-team-size" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                    <option value="1-5 employees">1-5 employees</option>
+                    <option value="5-15 employees" selected>5-15 employees</option>
+                    <option value="15-50 employees">15-50 employees</option>
+                    <option value="50+ employees">50+ employees</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-700 mb-1">Founded Year</label>
+                  <input type="number" id="reg-founded" min="2000" max="2026" value="2022" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3">
+                </div>
+              </div>
+            </div>
+
+            <!-- Services Checklist -->
+            <div class="border-b border-slate-100 pb-6">
+              <h3 class="text-base font-bold text-slate-900 mb-2">4. Services Provided (Select all that apply)</h3>
+              <p class="text-xs text-slate-500 mb-3">These will be linked to your agency profile and used in search filters.</p>
+              <div id="reg-services-container" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs text-slate-700">
+                <!-- Dynamically populated checkboxes -->
+              </div>
+            </div>
+
+            <!-- Agency Description -->
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1">Full Description & Pitch *</label>
+              <textarea id="reg-description" rows="5" required placeholder="Explain your agency's background, past client success, case studies, and what sets your team apart..." class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-3"></textarea>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 text-xs text-amber-900 flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-amber-600 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
+              <span>Submitted applications will be created as <strong>status = "draft"</strong> in the Supabase database. Our team verifies your GST / business presence before publishing.</span>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 bg-brand-900 hover:bg-brand-800 text-white font-bold text-sm rounded-xl shadow-md transition">
+              Submit Agency for Review
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 5. COMPARE VIEW                            -->
+    <!-- ========================================== -->
+    <section id="view-compare" class="page-view hidden">
+      <div class="bg-white border-b border-slate-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h1 class="text-2xl sm:text-3xl font-extrabold font-display text-slate-950">Compare Social Media Agencies</h1>
+              <p class="text-xs sm:text-sm text-slate-600 mt-1">Side-by-side comparison of pricing, team size, score, and services.</p>
+            </div>
+            <button onclick="clearCompareList()" class="text-xs font-semibold text-rose-600 hover:underline">Clear comparison</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <!-- Agency selector toolbar -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm mb-6 flex flex-wrap items-center gap-3">
+          <label class="text-xs font-bold text-slate-700">Add Agency to Compare:</label>
+          <select id="compare-add-select" class="text-xs bg-slate-50 border border-slate-200 rounded-lg p-2 font-medium">
+            <option value="">Select an agency...</option>
+          </select>
+          <button onclick="addSelectedToCompare()" class="px-3 py-2 bg-brand-900 text-white text-xs font-bold rounded-lg hover:bg-brand-800">Add</button>
+          <span class="text-xs text-slate-400 ml-auto">Compare up to 3 agencies</span>
+        </div>
+
+        <!-- Comparison Table / Cards Container -->
+        <div id="compare-table-wrapper" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-x-auto">
+          <!-- Rendered dynamically -->
+        </div>
+
+        <div id="compare-empty-state" class="hidden bg-white p-12 text-center rounded-2xl border border-slate-200">
+          <p class="text-slate-500 text-sm">No agencies selected for comparison yet.</p>
+          <p class="text-slate-400 text-xs mt-1">Browse the city listings and click the "Add to Compare" button on any agency card.</p>
+          <button onclick="navigateTo('city-listing', { stateSlug: 'maharashtra', citySlug: 'mumbai' })" class="mt-4 px-4 py-2 bg-brand-900 text-white text-xs font-semibold rounded-lg">Explore Mumbai Agencies</button>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ========================================== -->
+    <!-- 6. STATIC PAGES: ABOUT, CONTACT, PRIVACY, TERMS -->
+    <!-- ========================================== -->
+    <section id="view-about" class="page-view hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <div class="bg-white p-8 sm:p-12 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <h1 class="text-3xl font-extrabold font-display text-slate-900">About SMMA India</h1>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            <strong>SMMA India</strong> is India's premier curated marketplace connecting business owners, enterprise brands, and D2C startups with top-tier social media marketing agencies (SMMAs).
+          </p>
+          <h3 class="text-lg font-bold text-slate-900 pt-2">Our Mission</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            Finding a reliable agency in India has historically been messy — riddled with opaque pricing, inflated follower metrics, and poor accountability. SMMA India brings total transparency via verified client reviews, standard pricing benchmarks, and a mathematically transparent 100-point agency ranking system.
+          </p>
+          <h3 class="text-lg font-bold text-slate-900 pt-2">Coverage</h3>
+          <p class="text-slate-600 leading-relaxed text-sm">
+            We launch across 8 major Indian commercial centers: Mumbai, Delhi NCT, Bangalore, Hyderabad, Pune, Jaipur, Lucknow, and Ahmedabad, with continuous expansion into Tier-2 growth hubs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-contact" class="page-view hidden">
+      <div class="max-w-2xl mx-auto px-4 sm:px-6 py-12">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-6">
+          <h1 class="text-3xl font-extrabold font-display text-slate-900">Contact SMMA India</h1>
+          <p class="text-slate-600 text-sm">Have inquiries regarding agency verification, partnerships, or advertising?</p>
+          <div class="space-y-3 text-sm text-slate-700">
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-slate-900 w-20">Email:</span>
+              <span class="font-mono text-brand-900">support@smmaindia.in</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-slate-900 w-20">WhatsApp:</span>
+              <a href="https://wa.me/919999999999" target="_blank" class="text-emerald-600 font-semibold hover:underline">+91 99999 99999</a>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="font-bold text-slate-900 w-20">HQ:</span>
+              <span>Bandra-Kurla Complex (BKC), Mumbai, Maharashtra 400051</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-privacy" class="page-view hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-sm text-slate-600">
+          <h1 class="text-2xl font-bold font-display text-slate-900 mb-4">Privacy Policy</h1>
+          <p>Effective Date: September 2026. SMMA India respects your data privacy. Lead enquiries submitted through our agency forms are transmitted directly to the respective agency for business quotes.</p>
+          <p>We do not sell user lead databases to third-party ad networks. All sensitive credentials and inquiries are stored securely in Supabase (Mumbai Region).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-terms" class="page-view hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+        <div class="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm space-y-4 text-sm text-slate-600">
+          <h1 class="text-2xl font-bold font-display text-slate-900 mb-4">Terms of Service</h1>
+          <p>By listing or browsing on SMMA India, you agree to provide truthful business information. Agencies marked with "Verified" have submitted verified proof of business operations in their stated city.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- REVIEW MODAL -->
+  <div id="review-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-md w-full rounded-2xl p-6 shadow-2xl border border-slate-200">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+        <h3 class="text-base font-bold text-slate-900">Leave a Verified Review</h3>
+        <button onclick="closeReviewModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+      </div>
+
+      <form onsubmit="handleReviewSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Your Name</label>
+          <input type="text" id="rev-name" required placeholder="e.g. Ananya Roy" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Your Work Email</label>
+          <input type="email" id="rev-email" required placeholder="ananya@brand.com" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Rating</label>
+          <select id="rev-rating" class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5 font-bold text-amber-600">
+            <option value="5">★★★★★ (5 - Outstanding Results)</option>
+            <option value="4">★★★★☆ (4 - Very Good)</option>
+            <option value="3">★★★☆☆ (3 - Average)</option>
+            <option value="2">★★☆☆☆ (2 - Below Expectations)</option>
+            <option value="1">★☆☆☆☆ (1 - Poor)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">Feedback / Experience</label>
+          <textarea id="rev-comment" rows="3" required placeholder="Describe communication, creative quality, ROI, and delivery..." class="w-full text-xs bg-slate-50 border border-slate-200 rounded-lg p-2.5"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-brand-900 text-white font-bold text-xs rounded-xl hover:bg-brand-800 transition">
+          Submit Review
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SUPABASE SETUP & CONFIG MODAL -->
+  <div id="supabase-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white max-w-2xl w-full rounded-2xl p-6 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs">⚡</div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Supabase Backend (Mumbai ap-south-1)</h3>
+            <p class="text-[11px] text-slate-500">Live PostgreSQL connection + Schema DDL & Seed commands</p>
+          </div>
+        </div>
+        <button onclick="closeSupabaseModal()" class="text-slate-400 hover:text-slate-600 font-bold p-1">✕</button>
+      </div>
+
+      <div class="overflow-y-auto py-4 space-y-4 text-xs">
+        <!-- Live Connection Config Form -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+          <h4 class="font-bold text-slate-800 text-xs">Connect to Your Custom Mumbai Supabase Project</h4>
+          <p class="text-slate-500 text-[11px]">Enter your Supabase URL & Anon Key below to query your live cloud database directly. By default, it operates with bundled sample records for instant testing.</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-0.5">Project URL</label>
+              <input type="text" id="cfg-supabase-url" placeholder="https://xyzcompany.supabase.co" class="w-full bg-white border border-slate-200 rounded p-2 text-xs font-mono">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-0.5">Anon Public Key</label>
+              <input type="password" id="cfg-supabase-key" placeholder="eyJhbGciOiJIUzI1NiIsIn..." class="w-full bg-white border border-slate-200 rounded p-2 text-xs font-mono">
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="saveSupabaseConfig()" class="bg-emerald-600 text-white font-bold px-3 py-1.5 rounded text-xs hover:bg-emerald-700">Save & Connect</button>
+            <button onclick="testSupabaseConnection()" class="bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded text-xs hover:bg-slate-300">Test Connection</button>
+          </div>
+        </div>
+
+        <!-- SQL Schema & Seed Code block -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="font-bold text-slate-800">Ready-to-Run SQL Script (DDL + 8 Cities Seed)</span>
+            <button onclick="copySQLScript()" class="text-brand-900 font-bold hover:underline">Copy SQL to Clipboard</button>
+          </div>
+          <textarea id="supabase-sql-snippet" readonly rows="9" class="w-full font-mono text-[11px] bg-slate-900 text-emerald-400 p-3 rounded-xl border border-slate-800 leading-normal selection:bg-emerald-800"></textarea>
+          <p class="text-[11px] text-slate-400 mt-1">Copy this script and paste it into the <strong>SQL Editor</strong> in your Supabase dashboard to create all 9 tables (states, cities, agencies, services, agency_services, industries, agency_industries, reviews, leads) with indices and sample agencies.</p>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 flex justify-end">
+        <button onclick="closeSupabaseModal()" class="px-4 py-2 bg-slate-900 text-white text-xs font-bold rounded-lg">Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-slate-950 text-slate-400 text-xs border-t border-slate-800 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10">
+        
+        <div class="md:col-span-1 space-y-3">
+          <div class="flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-brand-600 flex items-center justify-center text-white font-bold text-sm">S</div>
+            <span class="font-display font-extrabold text-base text-white tracking-tight">SMMA <span class="text-brand-400">India</span></span>
+          </div>
+          <p class="text-slate-400 text-xs leading-relaxed">
+            "Find the Best Social Media Agency in Your City." The trusted standard for hiring high-performing social media marketing teams across India.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold uppercase tracking-wider text-[11px] mb-3">Launch Cities</h4>
+          <ul class="space-y-1.5" id="footer-cities-list">
+            <!-- Dynamically populated -->
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold uppercase tracking-wider text-[11px] mb-3">Agencies & Tools</h4>
+          <ul class="space-y-1.5">
+            <li><a href="#list-agency" onclick="navigateTo('list-agency')" class="hover:text-white transition">List Your Agency</a></li>
+            <li><a href="#compare" onclick="navigateTo('compare')" class="hover:text-white transition">Agency Comparison Matrix</a></li>
+            <li><button onclick="openSupabaseModal()" class="text-emerald-400 hover:underline">Supabase DB (Mumbai ap-south-1)</button></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-white font-bold uppercase tracking-wider text-[11px] mb-3">Company</h4>
+          <ul class="space-y-1.5">
+            <li><a href="#about" onclick="navigateTo('about')" class="hover:text-white transition">About SMMA India</a></li>
+            <li><a href="#contact" onclick="navigateTo('contact')" class="hover:text-white transition">Contact Us</a></li>
+            <li><a href="#privacy" onclick="navigateTo('privacy')" class="hover:text-white transition">Privacy Policy</a></li>
+            <li><a href="#terms" onclick="navigateTo('terms')" class="hover:text-white transition">Terms of Service</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="pt-8 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <p>© 2026 SMMA India Directory. Built with modern mobile-first design and Supabase Mumbai backend.</p>
+        <div class="flex items-center gap-4">
+          <span class="inline-flex items-center gap-1.5 text-[11px] text-slate-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+            Mumbai Cloud Backend Connected
+          </span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /**
+     * =========================================================================
+     * APPLICATION DATABASE & STATE
+     * =========================================================================
+     */
+    
+    // Default 8 States
+    const STATES_SEED = [
+      { id: 'st-dl', name: 'Delhi NCT', slug: 'delhi-nct' },
+      { id: 'st-mh', name: 'Maharashtra', slug: 'maharashtra' },
+      { id: 'st-ka', name: 'Karnataka', slug: 'karnataka' },
+      { id: 'st-ts', name: 'Telangana', slug: 'telangana' },
+      { id: 'st-rj', name: 'Rajasthan', slug: 'rajasthan' },
+      { id: 'st-up', name: 'Uttar Pradesh', slug: 'uttar-pradesh' },
+      { id: 'st-gj', name: 'Gujarat', slug: 'gujarat' }
+    ];
+
+    // Seed 8 Launch Cities (All marked is_live = true)
+    const CITIES_SEED = [
+      { id: 'ct-delhi', name: 'Delhi', slug: 'delhi', state_id: 'st-dl', state_slug: 'delhi-nct', is_live: true },
+      { id: 'ct-mumbai', name: 'Mumbai', slug: 'mumbai', state_id: 'st-mh', state_slug: 'maharashtra', is_live: true },
+      { id: 'ct-bangalore', name: 'Bangalore', slug: 'bangalore', state_id: 'st-ka', state_slug: 'karnataka', is_live: true },
+      { id: 'ct-hyderabad', name: 'Hyderabad', slug: 'hyderabad', state_id: 'st-ts', state_slug: 'telangana', is_live: true },
+      { id: 'ct-pune', name: 'Pune', slug: 'pune', state_id: 'st-mh', state_slug: 'maharashtra', is_live: true },
+      { id: 'ct-jaipur', name: 'Jaipur', slug: 'jaipur', state_id: 'st-rj', state_slug: 'rajasthan', is_live: true },
+      { id: 'ct-lucknow', name: 'Lucknow', slug: 'lucknow', state_id: 'st-up', state_slug: 'uttar-pradesh', is_live: true },
+      { id: 'ct-ahmedabad', name: 'Ahmedabad', slug: 'ahmedabad', state_id: 'st-gj', state_slug: 'gujarat', is_live: true }
+    ];
+
+    // Services
+    const SERVICES_SEED = [
+      { id: 'srv-ig', name: 'Instagram Management' },
+      { id: 'srv-reels', name: 'Reels / Video Production' },
+      { id: 'srv-ads', name: 'Paid Ads (Meta & Google)' },
+      { id: 'srv-inf', name: 'Influencer Marketing' },
+      { id: 'srv-content', name: 'Content Writing' },
+      { id: 'srv-branding', name: 'Branding & Creatives' },
+      { id: 'srv-seo', name: 'SEO & Search Growth' }
+    ];
+
+    // Industries
+    const INDUSTRIES_SEED = [
+      { id: 'ind-d2c', name: 'D2C Brands' },
+      { id: 'ind-rest', name: 'Restaurants & Cafes' },
+      { id: 'ind-clinic', name: 'Clinics & Healthcare' },
+      { id: 'ind-estate', name: 'Real Estate' },
+      { id: 'ind-edu', name: 'Education & Coaching' },
+      { id: 'ind-fashion', name: 'Fashion & Lifestyle' }
+    ];
+
+    // Placeholder sample agencies per city (clearly labeled dummy sample data for testing UI/filters)
+    const AGENCIES_SEED = [
+      // MUMBAI
+      {
+        id: 'ag-mum-1',
+        name: 'Apex Growth Media',
+        slug: 'apex-growth-media-mumbai',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Apex',
+        tagline: 'ROI-Driven Reels & Paid Acquisition for Fast-Growing D2C Brands',
+        description: '[SAMPLE DATA FOR TESTING]\nApex Growth Media is an Andheri-based social media powerhouse known for hyper-targeted Meta ads, high-converting creator Reels, and end-to-end Instagram brand building.\n\nOver the past 6 years, our team has scaled 40+ Indian consumer brands from 5-figure ad spends to 8-figure monthly revenues.',
+        state_id: 'st-mh',
+        city_id: 'ct-mumbai',
+        address: 'B-Wing, Lotus Corporate Park, Goregaon-Andheri Link Rd, Mumbai, Maharashtra 400063',
+        starting_price: 35000,
+        price_max: 120000,
+        team_size: '15-30 employees',
+        founded_year: 2018,
+        languages: 'English, Hindi, Marathi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        linkedin_url: 'https://linkedin.com',
+        facebook_url: 'https://facebook.com',
+        youtube_url: 'https://youtube.com',
+        phone: '+91 98200 11223',
+        whatsapp: '919820011223',
+        email: 'partnerships@apexgrowthmedia.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.9,
+        review_count: 28,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-ads', 'srv-inf'],
+        industries: ['ind-d2c', 'ind-fashion', 'ind-rest']
+      },
+      {
+        id: 'ag-mum-2',
+        name: 'KiteTail Social',
+        slug: 'kitetail-social-mumbai',
+        logo_url: 'https://placehold.co/200x200/0f172a/ffffff?text=KiteTail',
+        tagline: 'Aesthetic Content Curation & Healthcare Practice Growth',
+        description: '[SAMPLE DATA FOR TESTING]\nKiteTail Social helps top cosmetic clinics, doctors, and wellness centers in South Mumbai and Bandra build authentic authority on Instagram and YouTube.',
+        state_id: 'st-mh',
+        city_id: 'ct-mumbai',
+        address: 'Hill Road, Bandra West, Mumbai, Maharashtra 400050',
+        starting_price: 25000,
+        price_max: 75000,
+        team_size: '8-15 employees',
+        founded_year: 2021,
+        languages: 'English, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        linkedin_url: 'https://linkedin.com',
+        phone: '+91 98201 44556',
+        whatsapp: '919820144556',
+        email: 'hello@kitetailsocial.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.7,
+        review_count: 14,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-content', 'srv-branding'],
+        industries: ['ind-clinic', 'ind-rest']
+      },
+      {
+        id: 'ag-mum-3',
+        name: 'MetroViral Creators',
+        slug: 'metroviral-creators-mumbai',
+        logo_url: 'https://placehold.co/200x200/2563eb/ffffff?text=MetroViral',
+        tagline: 'High-frequency short form video & youth audience campaigns',
+        description: '[SAMPLE DATA FOR TESTING]\nWe script, shoot, and edit 30 viral Reels per month for restaurant chains and lifestyle brands across Mumbai and Thane.',
+        state_id: 'st-mh',
+        city_id: 'ct-mumbai',
+        address: 'BKC, Bandra East, Mumbai, Maharashtra 400051',
+        starting_price: 20000,
+        price_max: 60000,
+        team_size: '5-10 employees',
+        founded_year: 2022,
+        languages: 'English, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98202 77889',
+        whatsapp: '919820277889',
+        email: 'growth@metroviral.test',
+        is_verified: false,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: false,
+        avg_rating: 4.2,
+        review_count: 8,
+        status: 'published',
+        services: ['srv-reels', 'srv-inf', 'srv-branding'],
+        industries: ['ind-rest', 'ind-fashion']
+      },
+
+      // DELHI
+      {
+        id: 'ag-del-1',
+        name: 'Capital Reach Labs',
+        slug: 'capital-reach-labs-delhi',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Capital',
+        tagline: 'Dominating North India with Performance Marketing & Influencer Buzz',
+        description: '[SAMPLE DATA FOR TESTING]\nPremier Delhi-NCR agency managing full-funnel digital pipelines. Specializing in high-ticket real estate lead generation and retail brand visibility.',
+        state_id: 'st-dl',
+        city_id: 'ct-delhi',
+        address: 'Connaught Place, Central Delhi, New Delhi 110001',
+        starting_price: 45000,
+        price_max: 180000,
+        team_size: '20-50 employees',
+        founded_year: 2017,
+        languages: 'English, Hindi, Punjabi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        linkedin_url: 'https://linkedin.com',
+        phone: '+91 98111 22334',
+        whatsapp: '919811122334',
+        email: 'contact@capitalreach.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.9,
+        review_count: 32,
+        status: 'published',
+        services: ['srv-ads', 'srv-inf', 'srv-seo', 'srv-ig'],
+        industries: ['ind-estate', 'ind-edu', 'ind-d2c']
+      },
+      {
+        id: 'ag-del-2',
+        name: 'Saffron Media Collective',
+        slug: 'saffron-media-delhi',
+        logo_url: 'https://placehold.co/200x200/d97706/ffffff?text=Saffron',
+        tagline: 'Bold branding and Instagram growth for hospitality and cafes',
+        description: '[SAMPLE DATA FOR TESTING]\nWe manage food styling, video storytelling, and influencer dine-in campaigns for cafes across Hauz Khas, Saket, and Gurgaon.',
+        state_id: 'st-dl',
+        city_id: 'ct-delhi',
+        address: 'South Extension II, New Delhi 110049',
+        starting_price: 30000,
+        price_max: 90000,
+        team_size: '10-20 employees',
+        founded_year: 2019,
+        languages: 'English, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98112 33445',
+        whatsapp: '919811233445',
+        email: 'connect@saffronmedia.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.6,
+        review_count: 19,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-branding', 'srv-content'],
+        industries: ['ind-rest', 'ind-fashion']
+      },
+
+      // BANGALORE
+      {
+        id: 'ag-blr-1',
+        name: 'Indiranagar Social Lab',
+        slug: 'indiranagar-social-lab-bangalore',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=ISL',
+        tagline: 'Engineering Viral Loops for Tech Startups and Modern D2C',
+        description: '[SAMPLE DATA FOR TESTING]\nBangalore’s tech-first social media agency. We merge algorithmic distribution on LinkedIn and Instagram with punchy storytelling.',
+        state_id: 'st-ka',
+        city_id: 'ct-bangalore',
+        address: '100ft Road, Indiranagar, Bengaluru, Karnataka 560038',
+        starting_price: 40000,
+        price_max: 150000,
+        team_size: '20-40 employees',
+        founded_year: 2018,
+        languages: 'English, Kannada, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        linkedin_url: 'https://linkedin.com',
+        phone: '+91 98800 55667',
+        whatsapp: '919880055667',
+        email: 'grow@indiranagarsocial.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.8,
+        review_count: 26,
+        status: 'published',
+        services: ['srv-ig', 'srv-ads', 'srv-content', 'srv-reels'],
+        industries: ['ind-d2c', 'ind-edu']
+      },
+      {
+        id: 'ag-blr-2',
+        name: 'Koramangala Pixel Co',
+        slug: 'koramangala-pixel-co-bangalore',
+        logo_url: 'https://placehold.co/200x200/3b82f6/ffffff?text=PixelCo',
+        tagline: 'Boutique agency specializing in high-ROAS Meta Ads',
+        description: '[SAMPLE DATA FOR TESTING]\nLaser-focused on media buying, UGC creative pipelines, and retention marketing for consumer brands.',
+        state_id: 'st-ka',
+        city_id: 'ct-bangalore',
+        address: 'Koramangala 4th Block, Bengaluru, Karnataka 560034',
+        starting_price: 30000,
+        price_max: 95000,
+        team_size: '5-15 employees',
+        founded_year: 2020,
+        languages: 'English, Kannada',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98801 88990',
+        whatsapp: '919880188990',
+        email: 'hello@pixelco.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.5,
+        review_count: 17,
+        status: 'published',
+        services: ['srv-ads', 'srv-reels', 'srv-branding'],
+        industries: ['ind-d2c', 'ind-fashion']
+      },
+
+      // HYDERABAD
+      {
+        id: 'ag-hyd-1',
+        name: 'Jubilee Digital Media',
+        slug: 'jubilee-digital-media-hyderabad',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Jubilee',
+        tagline: 'Elevating Telangana Brands with High-End Video Production & Ads',
+        description: '[SAMPLE DATA FOR TESTING]\nBased in Jubilee Hills, we manage enterprise social media marketing for real estate builders, hospitals, and jewellery brands.',
+        state_id: 'st-ts',
+        city_id: 'ct-hyderabad',
+        address: 'Road No 36, Jubilee Hills, Hyderabad, Telangana 500033',
+        starting_price: 35000,
+        price_max: 130000,
+        team_size: '15-30 employees',
+        founded_year: 2019,
+        languages: 'English, Telugu, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98490 12345',
+        whatsapp: '919849012345',
+        email: 'info@jubileedigital.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.7,
+        review_count: 22,
+        status: 'published',
+        services: ['srv-reels', 'srv-ads', 'srv-branding', 'srv-seo'],
+        industries: ['ind-estate', 'ind-clinic', 'ind-fashion']
+      },
+      {
+        id: 'ag-hyd-2',
+        name: 'CyberCity Socials',
+        slug: 'cybercity-socials-hyderabad',
+        logo_url: 'https://placehold.co/200x200/0284c7/ffffff?text=CyberCity',
+        tagline: 'Youth-centric Reels and food influencer activations in HITEC City',
+        description: '[SAMPLE DATA FOR TESTING]\nAffordable monthly retainers for restaurants, cafes, and education institutes looking to build an organic social presence.',
+        state_id: 'st-ts',
+        city_id: 'ct-hyderabad',
+        address: 'HITEC City, Madhapur, Hyderabad, Telangana 500081',
+        starting_price: 18000,
+        price_max: 50000,
+        team_size: '5-12 employees',
+        founded_year: 2022,
+        languages: 'English, Telugu, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98491 56789',
+        whatsapp: '919849156789',
+        email: 'growth@cybercitysocials.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.4,
+        review_count: 11,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-inf'],
+        industries: ['ind-rest', 'ind-edu']
+      },
+
+      // PUNE
+      {
+        id: 'ag-pune-1',
+        name: 'Deccan Pulse Media',
+        slug: 'deccan-pulse-media-pune',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Deccan',
+        tagline: 'Koregaon Park Creative Studio for Lifestyle Brands & Cafes',
+        description: '[SAMPLE DATA FOR TESTING]\nPune’s premier boutique SMMA. We deliver cinema-grade video, engaging carousel graphics, and community building on Instagram.',
+        state_id: 'st-mh',
+        city_id: 'ct-pune',
+        address: 'North Main Road, Koregaon Park, Pune, Maharashtra 411001',
+        starting_price: 25000,
+        price_max: 85000,
+        team_size: '10-20 employees',
+        founded_year: 2019,
+        languages: 'English, Marathi, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98220 33441',
+        whatsapp: '919822033441',
+        email: 'hello@deccanpulse.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.8,
+        review_count: 21,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-branding', 'srv-content'],
+        industries: ['ind-rest', 'ind-fashion', 'ind-clinic']
+      },
+      {
+        id: 'ag-pune-2',
+        name: 'Hinjawadi TechMark',
+        slug: 'hinjawadi-techmark-pune',
+        logo_url: 'https://placehold.co/200x200/475569/ffffff?text=TechMark',
+        tagline: 'Lead Generation & Social Ad Funnels for Real Estate & B2B',
+        description: '[SAMPLE DATA FOR TESTING]\nData-backed social marketing targeting high-net-worth IT professionals and homebuyers in West Pune.',
+        state_id: 'st-mh',
+        city_id: 'ct-pune',
+        address: 'Phase 1, Hinjawadi Rajiv Gandhi Infotech Park, Pune, Maharashtra 411057',
+        starting_price: 30000,
+        price_max: 90000,
+        team_size: '8-18 employees',
+        founded_year: 2021,
+        languages: 'English, Hindi, Marathi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98221 66772',
+        whatsapp: '919822166772',
+        email: 'info@hinjawaditechmark.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.4,
+        review_count: 12,
+        status: 'published',
+        services: ['srv-ads', 'srv-seo', 'srv-ig'],
+        industries: ['ind-estate', 'ind-edu']
+      },
+
+      // JAIPUR
+      {
+        id: 'ag-jai-1',
+        name: 'PinkCity Viral Studio',
+        slug: 'pinkcity-viral-studio-jaipur',
+        logo_url: 'https://placehold.co/200x200/db2777/ffffff?text=PinkCity',
+        tagline: 'Authentic Heritage & Lifestyle Marketing for Tourism and Jewellery',
+        description: '[SAMPLE DATA FOR TESTING]\nHelping royal heritage hotels, silver jewellers, and handblock clothing labels scale global ecommerce sales via Instagram.',
+        state_id: 'st-rj',
+        city_id: 'ct-jaipur',
+        address: 'C-Scheme, Ashok Nagar, Jaipur, Rajasthan 302001',
+        starting_price: 20000,
+        price_max: 75000,
+        team_size: '8-15 employees',
+        founded_year: 2020,
+        languages: 'English, Hindi, Rajasthani',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98290 88776',
+        whatsapp: '919829088776',
+        email: 'namaste@pinkcityviral.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.7,
+        review_count: 18,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-inf', 'srv-branding'],
+        industries: ['ind-fashion', 'ind-d2c', 'ind-rest']
+      },
+      {
+        id: 'ag-jai-2',
+        name: 'Thar Growth Partners',
+        slug: 'thar-growth-partners-jaipur',
+        logo_url: 'https://placehold.co/200x200/ea580c/ffffff?text=Thar',
+        tagline: 'Performance ads and local clinic lead generation',
+        description: '[SAMPLE DATA FOR TESTING]\nSpecialized in Google & Meta advertising for doctors, hospitals, and coaching institutes across Jaipur and Kota.',
+        state_id: 'st-rj',
+        city_id: 'ct-jaipur',
+        address: 'Vaishali Nagar, Jaipur, Rajasthan 302021',
+        starting_price: 15000,
+        price_max: 45000,
+        team_size: '4-8 employees',
+        founded_year: 2022,
+        languages: 'Hindi, English',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98291 22334',
+        whatsapp: '919829122334',
+        email: 'growth@thargrowth.test',
+        is_verified: false,
+        is_featured: false,
+        has_portfolio: false,
+        fast_responder: true,
+        avg_rating: 4.1,
+        review_count: 7,
+        status: 'published',
+        services: ['srv-ads', 'srv-seo', 'srv-content'],
+        industries: ['ind-clinic', 'ind-edu']
+      },
+
+      // LUCKNOW
+      {
+        id: 'ag-lko-1',
+        name: 'Awadh Social Co',
+        slug: 'awadh-social-co-lucknow',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Awadh',
+        tagline: 'Leading Social Media Agency in UP for D2C & Healthcare',
+        description: '[SAMPLE DATA FOR TESTING]\nFrom Gomti Nagar to Hazratganj, we manage high-engagement Instagram channels and localized ads for hospital chains, restaurants, and apparel stores.',
+        state_id: 'st-up',
+        city_id: 'ct-lucknow',
+        address: 'Vibhuti Khand, Gomti Nagar, Lucknow, Uttar Pradesh 226010',
+        starting_price: 20000,
+        price_max: 65000,
+        team_size: '10-20 employees',
+        founded_year: 2019,
+        languages: 'Hindi, English, Urdu',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98390 11223',
+        whatsapp: '919839011223',
+        email: 'info@awadhsocial.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.8,
+        review_count: 24,
+        status: 'published',
+        services: ['srv-ig', 'srv-reels', 'srv-ads', 'srv-inf'],
+        industries: ['ind-clinic', 'ind-rest', 'ind-fashion']
+      },
+      {
+        id: 'ag-lko-2',
+        name: 'Gomti Media Works',
+        slug: 'gomti-media-works-lucknow',
+        logo_url: 'https://placehold.co/200x200/047857/ffffff?text=Gomti',
+        tagline: 'Affordable Reels & social management for retail showrooms',
+        description: '[SAMPLE DATA FOR TESTING]\nHelping Lucknow retail businesses generate daily walk-ins using hyper-local Meta ad funnels and influencer collaborations.',
+        state_id: 'st-up',
+        city_id: 'ct-lucknow',
+        address: 'Hazratganj, Lucknow, Uttar Pradesh 226001',
+        starting_price: 15000,
+        price_max: 40000,
+        team_size: '5-10 employees',
+        founded_year: 2021,
+        languages: 'Hindi, English',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98391 33445',
+        whatsapp: '919839133445',
+        email: 'contact@gomtimedia.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: false,
+        avg_rating: 4.3,
+        review_count: 10,
+        status: 'published',
+        services: ['srv-reels', 'srv-branding', 'srv-ads'],
+        industries: ['ind-rest', 'ind-estate']
+      },
+
+      // AHMEDABAD
+      {
+        id: 'ag-ahd-1',
+        name: 'Sabarmati Creative Guild',
+        slug: 'sabarmati-creative-guild-ahmedabad',
+        logo_url: 'https://placehold.co/200x200/1e3a8a/ffffff?text=Sabarmati',
+        tagline: 'Driving Exponential Revenue for Gujarat D2C & Textile Giants',
+        description: '[SAMPLE DATA FOR TESTING]\nSG Highway based full-stack SMMA. We handle high-budget Meta/Google ads, video production studios, and conversion-rate optimization.',
+        state_id: 'st-gj',
+        city_id: 'ct-ahmedabad',
+        address: 'SG Highway, Bodakdev, Ahmedabad, Gujarat 380054',
+        starting_price: 35000,
+        price_max: 140000,
+        team_size: '15-35 employees',
+        founded_year: 2018,
+        languages: 'Gujarati, English, Hindi',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98790 44556',
+        whatsapp: '919879044556',
+        email: 'grow@sabarmaticreative.test',
+        is_verified: true,
+        is_featured: true,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.9,
+        review_count: 29,
+        status: 'published',
+        services: ['srv-ads', 'srv-reels', 'srv-ig', 'srv-branding'],
+        industries: ['ind-d2c', 'ind-fashion', 'ind-estate']
+      },
+      {
+        id: 'ag-ahd-2',
+        name: 'Vibrant Wave Media',
+        slug: 'vibrant-wave-ahmedabad',
+        logo_url: 'https://placehold.co/200x200/6366f1/ffffff?text=Vibrant',
+        tagline: 'Reels and Influencer Marketing for Food Brands & Jewelry',
+        description: '[SAMPLE DATA FOR TESTING]\nProducing viral short videos for Gujarati snack brands, restaurant chains, and jewellery houses.',
+        state_id: 'st-gj',
+        city_id: 'ct-ahmedabad',
+        address: 'Prahlad Nagar, Ahmedabad, Gujarat 380015',
+        starting_price: 22000,
+        price_max: 70000,
+        team_size: '6-14 employees',
+        founded_year: 2021,
+        languages: 'Gujarati, Hindi, English',
+        instagram_url: 'https://instagram.com',
+        website_url: 'https://example.com',
+        phone: '+91 98791 77889',
+        whatsapp: '919879177889',
+        email: 'hello@vibrantwave.test',
+        is_verified: true,
+        is_featured: false,
+        has_portfolio: true,
+        fast_responder: true,
+        avg_rating: 4.5,
+        review_count: 15,
+        status: 'published',
+        services: ['srv-reels', 'srv-inf', 'srv-content'],
+        industries: ['ind-rest', 'ind-fashion']
+      }
+    ];
+
+    // Reviews Seed
+    const REVIEWS_SEED = [
+      {
+        id: 'rev-1',
+        agency_id: 'ag-mum-1',
+        reviewer_name: 'Vikram Mehta',
+        reviewer_email: 'vikram@d2cskin.test',
+        rating: 5,
+        comment: 'Apex completely rebuilt our Reels strategy. Within 60 days our cost per purchase on Meta dropped by 38%. The best SMMA in Mumbai without question!',
+        is_verified: true,
+        created_at: '2026-08-14'
+      },
+      {
+        id: 'rev-2',
+        agency_id: 'ag-mum-1',
+        reviewer_name: 'Pooja Singhania',
+        reviewer_email: 'pooja@couture.test',
+        rating: 5,
+        comment: 'Very professional reporting and transparent dashboard. Founders are hands-on and responsive on WhatsApp.',
+        is_verified: true,
+        created_at: '2026-07-22'
+      },
+      {
+        id: 'rev-3',
+        agency_id: 'ag-del-1',
+        reviewer_name: 'Aman Deep Singh',
+        reviewer_email: 'aman@gurgaonproperties.test',
+        rating: 5,
+        comment: 'Generated over 240 qualified luxury real estate leads in DLF Phase 5. Outstanding ad creative execution.',
+        is_verified: true,
+        created_at: '2026-06-18'
+      },
+      {
+        id: 'rev-4',
+        agency_id: 'ag-blr-1',
+        reviewer_name: 'Sneha Rao',
+        reviewer_email: 'sneha@fitbyte.test',
+        rating: 5,
+        comment: 'Understands startup metrics and CAC:LTV economics natively. Clean video shoots and prompt deliveries.',
+        is_verified: true,
+        created_at: '2026-09-02'
+      }
+    ];
+
+    // Leads store (in-memory state with Supabase cloud sync)
+    let LEADS_STORAGE = [];
+    let COMPARE_SELECTION = [];
+
+    // Working mutable arrays for reactive state
+    let state = {
+      states: [...STATES_SEED],
+      cities: [...CITIES_SEED],
+      services: [...SERVICES_SEED],
+      industries: [...INDUSTRIES_SEED],
+      agencies: [],
+      reviews: [...REVIEWS_SEED],
+      activeCity: null,
+      activeState: null,
+      activeAgency: null,
+      currentView: 'home',
+      compareList: []
+    };
+
+    /**
+     * =========================================================================
+     * RANKING LOGIC ENGINE (Formula Implementation)
+     * =========================================================================
+     * Formula:
+     * - Rating (out of 5) → up to 30 points: (avg_rating / 5) * 30
+     * - Review count → up to 20 points: min(20, (count / 30) * 20)
+     * - Verified status → 10 points if is_verified = true
+     * - Has portfolio content → 10 points if true
+     * - Profile completeness → up to 15 points (checks website, instagram, phone, email, services, price, team_size, description)
+     * - Years since founded → up to 10 points (cap at 10 years, current year 2026)
+     * - Response speed flag → 5 points
+     * Total = 100 points
+     */
+    function computeAgencyRankScore(agency) {
+      let score = 0;
+      
+      // 1. Rating (up to 30 pts)
+      const ratingPts = ((agency.avg_rating || 0) / 5) * 30;
+      score += ratingPts;
+
+      // 2. Review count (up to 20 pts, capped at 30 reviews)
+      const reviewPts = Math.min(20, ((agency.review_count || 0) / 30) * 20);
+      score += reviewPts;
+
+      // 3. Verified status (10 pts)
+      if (agency.is_verified) {
+        score += 10;
+      }
+
+      // 4. Has portfolio (10 pts)
+      if (agency.has_portfolio !== false) {
+        score += 10;
+      }
+
+      // 5. Profile completeness (up to 15 pts)
+      let completeness = 0;
+      if (agency.website_url) completeness += 2;
+      if (agency.instagram_url) completeness += 2;
+      if (agency.phone) completeness += 2;
+      if (agency.email) completeness += 2;
+      if (agency.services && agency.services.length > 0) completeness += 2.5;
+      if (agency.starting_price) completeness += 2;
+      if (agency.team_size) completeness += 1.5;
+      if (agency.description && agency.description.length > 50) completeness += 1;
+      score += Math.min(15, completeness);
+
+      // 6. Years since founded (up to 10 pts, capped at 10 years)
+      const currentYear = 2026;
+      const founded = agency.founded_year || 2023;
+      const years = Math.max(0, currentYear - founded);
+      const yearPts = Math.min(10, years * 1.5);
+      score += yearPts;
+
+      // 7. Fast responder flag (5 pts)
+      if (agency.fast_responder) {
+        score += 5;
+      }
+
+      return Math.round(score);
+    }
+
+    // Populate rank_score on all seed agencies
+    state.agencies = AGENCIES_SEED.map(ag => ({
+      ...ag,
+      rank_score: computeAgencyRankScore(ag)
+    }));
+
+    // Pre-populate comparison with 2 agencies
+    state.compareList = ['ag-mum-1', 'ag-blr-1'];
+
+    /**
+     * =========================================================================
+     * SUPABASE BACKEND CLIENT & MUMBAI REGION SYNC
+     * =========================================================================
+     */
+    let supabaseClient = null;
+
+    function initSupabaseFromConfig() {
+      const storedUrl = localStorage.getItem('smma_supabase_url') || '';
+      const storedKey = localStorage.getItem('smma_supabase_key') || '';
+
+      if (storedUrl && storedKey && window.supabase) {
+        try {
+          supabaseClient = window.supabase.createClient(storedUrl, storedKey);
+          updateBackendIndicator(true, 'Mumbai Cloud Active');
+        } catch (err) {
+          console.warn('Supabase init warning, running bundled Mumbai state:', err);
+          updateBackendIndicator(true, 'Mumbai DB Bundled');
+        }
+      } else {
+        updateBackendIndicator(true, 'Mumbai DB Ready');
+      }
+    }
+
+    function updateBackendIndicator(isOk, text) {
+      const pill = document.getElementById('backend-status-indicator');
+      const label = document.getElementById('backend-status-text');
+      if (pill) {
+        pill.className = `w-2 h-2 rounded-full ${isOk ? 'bg-emerald-500 animate-pulse' : 'bg-amber-500'}`;
+      }
+      if (label) label.textContent = text;
+    }
+
+    // Supabase SQL generation script for user copy-paste
+    const SUPABASE_SQL_SCRIPT = `-- ========================================================================
+-- SMMA INDIA DATABASE SCHEMA (Supabase Mumbai Region - ap-south-1)
+-- Run this complete script in the Supabase SQL Editor.
+-- ========================================================================
+
+-- 1. States table
+CREATE TABLE IF NOT EXISTS public.states (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL
+);
+
+-- 2. Cities table
+CREATE TABLE IF NOT EXISTS public.cities (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  state_id TEXT REFERENCES public.states(id) ON DELETE CASCADE,
+  is_live BOOLEAN DEFAULT true
+);
+
+-- 3. Agencies table
+CREATE TABLE IF NOT EXISTS public.agencies (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  slug TEXT UNIQUE NOT NULL,
+  logo_url TEXT,
+  tagline TEXT,
+  description TEXT,
+  state_id TEXT REFERENCES public.states(id),
+  city_id TEXT REFERENCES public.cities(id),
+  address TEXT,
+  starting_price NUMERIC DEFAULT 25000,
+  price_max NUMERIC DEFAULT 100000,
+  team_size TEXT,
+  founded_year INTEGER,
+  languages TEXT,
+  instagram_url TEXT,
+  website_url TEXT,
+  linkedin_url TEXT,
+  facebook_url TEXT,
+  youtube_url TEXT,
+  phone TEXT,
+  whatsapp TEXT,
+  email TEXT,
+  is_verified BOOLEAN DEFAULT false,
+  is_featured BOOLEAN DEFAULT false,
+  rank_score NUMERIC DEFAULT 50,
+  avg_rating NUMERIC DEFAULT 4.5,
+  review_count INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'draft',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 4. Services table
+CREATE TABLE IF NOT EXISTS public.services (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+-- 5. Agency_Services join table
+CREATE TABLE IF NOT EXISTS public.agency_services (
+  agency_id TEXT REFERENCES public.agencies(id) ON DELETE CASCADE,
+  service_id TEXT REFERENCES public.services(id) ON DELETE CASCADE,
+  PRIMARY KEY (agency_id, service_id)
+);
+
+-- 6. Industries table
+CREATE TABLE IF NOT EXISTS public.industries (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL
+);
+
+-- 7. Agency_Industries join table
+CREATE TABLE IF NOT EXISTS public.agency_industries (
+  agency_id TEXT REFERENCES public.agencies(id) ON DELETE CASCADE,
+  industry_id TEXT REFERENCES public.industries(id) ON DELETE CASCADE,
+  PRIMARY KEY (agency_id, industry_id)
+);
+
+-- 8. Reviews table
+CREATE TABLE IF NOT EXISTS public.reviews (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  agency_id TEXT REFERENCES public.agencies(id) ON DELETE CASCADE,
+  reviewer_name TEXT NOT NULL,
+  reviewer_email TEXT NOT NULL,
+  rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+  comment TEXT,
+  is_verified BOOLEAN DEFAULT false,
+  status TEXT DEFAULT 'approved',
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- 9. Leads table
+CREATE TABLE IF NOT EXISTS public.leads (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  agency_id TEXT REFERENCES public.agencies(id) ON DELETE CASCADE,
+  client_name TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  email TEXT,
+  business_type TEXT,
+  budget TEXT,
+  message TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- SEED 8 STATES & 8 CITIES
+INSERT INTO public.states (id, name, slug) VALUES
+  ('st-dl', 'Delhi NCT', 'delhi-nct'),
+  ('st-mh', 'Maharashtra', 'maharashtra'),
+  ('st-ka', 'Karnataka', 'karnataka'),
+  ('st-ts', 'Telangana', 'telangana'),
+  ('st-rj', 'Rajasthan', 'rajasthan'),
+  ('st-up', 'Uttar Pradesh', 'uttar-pradesh'),
+  ('st-gj', 'Gujarat', 'gujarat')
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.cities (id, name, slug, state_id, is_live) VALUES
+  ('ct-delhi', 'Delhi', 'delhi', 'st-dl', true),
+  ('ct-mumbai', 'Mumbai', 'mumbai', 'st-mh', true),
+  ('ct-bangalore', 'Bangalore', 'bangalore', 'st-ka', true),
+  ('ct-hyderabad', 'Hyderabad', 'hyderabad', 'st-ts', true),
+  ('ct-pune', 'Pune', 'pune', 'st-mh', true),
+  ('ct-jaipur', 'Jaipur', 'jaipur', 'st-rj', true),
+  ('ct-lucknow', 'Lucknow', 'lucknow', 'st-up', true),
+  ('ct-ahmedabad', 'Ahmedabad', 'ahmedabad', 'st-gj', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- SEED SERVICES
+INSERT INTO public.services (id, name) VALUES
+  ('srv-ig', 'Instagram Management'),
+  ('srv-reels', 'Reels / Video Production'),
+  ('srv-ads', 'Paid Ads (Meta & Google)'),
+  ('srv-inf', 'Influencer Marketing'),
+  ('srv-content', 'Content Writing'),
+  ('srv-branding', 'Branding & Creatives'),
+  ('srv-seo', 'SEO & Search Growth')
+ON CONFLICT (id) DO NOTHING;
+
+-- SEED INDUSTRIES
+INSERT INTO public.industries (id, name) VALUES
+  ('ind-d2c', 'D2C Brands'),
+  ('ind-rest', 'Restaurants & Cafes'),
+  ('ind-clinic', 'Clinics & Healthcare'),
+  ('ind-estate', 'Real Estate'),
+  ('ind-edu', 'Education & Coaching'),
+  ('ind-fashion', 'Fashion & Lifestyle')
+ON CONFLICT (id) DO NOTHING;
+
+-- ENABLE PUBLIC READ POLICIES (Row Level Security)
+ALTER TABLE public.states ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.cities ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agencies ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agency_services ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.industries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.agency_industries ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public read states" ON public.states FOR SELECT USING (true);
+CREATE POLICY "Public read cities" ON public.cities FOR SELECT USING (true);
+CREATE POLICY "Public read agencies" ON public.agencies FOR SELECT USING (true);
+CREATE POLICY "Public read services" ON public.services FOR SELECT USING (true);
+CREATE POLICY "Public read reviews" ON public.reviews FOR SELECT USING (true);
+CREATE POLICY "Public insert leads" ON public.leads FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert reviews" ON public.reviews FOR INSERT WITH CHECK (true);
+CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH CHECK (true);
+`;
+
+    /**
+     * =========================================================================
+     * UI TOAST NOTIFICATION UTILITY (No browser alert)
+     * =========================================================================
+     */
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      const bgColor = type === 'success' ? 'bg-slate-900 text-white border-brand-500' : 'bg-rose-900 text-white border-rose-500';
+      const icon = type === 'success' ? '✓' : 'ℹ';
+
+      toast.className = `${bgColor} pointer-events-auto p-3.5 rounded-xl shadow-2xl border flex items-center gap-3 transition-all duration-300 transform translate-y-4 opacity-0 text-xs font-medium`;
+      toast.innerHTML = `
+        <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center font-bold text-xs shrink-0">${icon}</span>
+        <span class="flex-1">${message}</span>
+      `;
+
+      container.appendChild(toast);
+      
+      // Animate in
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-4', 'opacity-0');
+      });
+
+      // Remove after 3.8s
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3800);
+    }
+
+    /**
+     * =========================================================================
+     * SPA ROUTING & VIEW NAVIGATION
+     * =========================================================================
+     */
+    function navigateTo(viewName, params = {}) {
+      // Hide all views
+      document.querySelectorAll('.page-view').forEach(el => el.classList.add('hidden'));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      state.currentView = viewName;
+
+      if (viewName === 'home') {
+        document.getElementById('view-home').classList.remove('hidden');
+        updateSEOMeta(
+          'SMMA India | Find the Best Social Media Agency in Your City',
+          'Verified directory of the top social media marketing agencies (SMMAs) across Indian cities. Transparent pricing, verified reviews, and free quotes.'
+        );
+        window.location.hash = '#home';
+      } 
+      else if (viewName === 'city-listing') {
+        document.getElementById('view-city-listing').classList.remove('hidden');
+        renderCityListingView(params.stateSlug, params.citySlug);
+      }
+      else if (viewName === 'agency-profile') {
+        document.getElementById('view-agency-profile').classList.remove('hidden');
+        renderAgencyProfileView(params.agencySlug);
+      }
+      else if (viewName === 'list-agency') {
+        document.getElementById('view-list-agency').classList.remove('hidden');
+        updateSEOMeta('List Your SMMA | SMMA India Directory', 'Submit your social media marketing agency to receive inbound business client leads.');
+        window.location.hash = '#list-agency';
+      }
+      else if (viewName === 'compare') {
+        document.getElementById('view-compare').classList.remove('hidden');
+        renderCompareView();
+        updateSEOMeta('Compare Social Media Agencies Side-by-Side | SMMA India', 'Compare top Indian social media marketing agencies by rating, pricing, and services.');
+        window.location.hash = '#compare';
+      }
+      else if (['about', 'contact', 'privacy', 'terms'].includes(viewName)) {
+        document.getElementById(`view-${viewName}`).classList.remove('hidden');
+        window.location.hash = `#${viewName}`;
+      }
+
+      updateCompareBadge();
+    }
+
+    function updateSEOMeta(title, description) {
+      document.title = title;
+      const metaTitle = document.getElementById('page-meta-title');
+      const metaDesc = document.getElementById('page-meta-desc');
+      if (metaTitle) metaTitle.textContent = title;
+      if (metaDesc) metaDesc.setAttribute('content', description);
+    }
+
+    /**
+     * =========================================================================
+     * INITIALIZATION & SEED RENDERING
+     * =========================================================================
+     */
+    window.addEventListener('DOMContentLoaded', () => {
+      initSupabaseFromConfig();
+      populateDropdowns();
+      renderHomePopularCities();
+      renderHomeFeaturedAgencies();
+      populateServicesCheckboxes();
+      populateFooterCities();
+
+      // Setup SQL preview text
+      const sqlTextarea = document.getElementById('supabase-sql-snippet');
+      if (sqlTextarea) sqlTextarea.value = SUPABASE_SQL_SCRIPT;
+
+      // Handle direct hash navigation
+      handleHashRoute();
+      window.addEventListener('hashchange', handleHashRoute);
+    });
+
+    function handleHashRoute() {
+      const hash = window.location.hash.replace('#', '') || 'home';
+      
+      if (hash.startsWith('smma/')) {
+        const parts = hash.split('/');
+        const stateSlug = parts[1] || 'maharashtra';
+        const citySlug = parts[2] || 'mumbai';
+        navigateTo('city-listing', { stateSlug, citySlug });
+      } else if (hash.startsWith('agency/')) {
+        const parts = hash.split('/');
+        const agencySlug = parts[1];
+        navigateTo('agency-profile', { agencySlug });
+      } else if (['list-agency', 'compare', 'about', 'contact', 'privacy', 'terms'].includes(hash)) {
+        navigateTo(hash);
+      } else {
+        navigateTo('home');
+      }
+    }
+
+    function populateDropdowns() {
+      // Hero dropdowns
+      const heroState = document.getElementById('hero-state-select');
+      const heroCity = document.getElementById('hero-city-select');
+      
+      // Filter sidebar dropdowns
+      const filterState = document.getElementById('filter-state');
+      const filterCity = document.getElementById('filter-city');
+
+      // Agency registration dropdowns
+      const regState = document.getElementById('reg-state');
+      const regCity = document.getElementById('reg-city');
+
+      // Nav dropdown
+      const navDropdown = document.getElementById('nav-cities-dropdown');
+      const mobileNavCities = document.getElementById('mobile-cities-links');
+
+      if (heroState) {
+        heroState.innerHTML = '<option value="">All States</option>' + state.states.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      }
+
+      if (filterState) {
+        filterState.innerHTML = state.states.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+      }
+
+      if (regState) {
+        regState.innerHTML = state.states.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        onRegStateChange();
+      }
+
+      // Populate cities dropdowns
+      onHeroStateChange();
+
+      // Nav cities list
+      if (navDropdown) {
+        navDropdown.innerHTML = state.cities.map(c => `
+          <a href="#smma/${c.state_slug}/${c.slug}" onclick="navigateTo('city-listing', {stateSlug: '${c.state_slug}', citySlug: '${c.slug}'})" class="block px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 hover:text-brand-900 font-medium">
+            ${c.name}
+          </a>
+        `).join('');
+      }
+
+      if (mobileNavCities) {
+        mobileNavCities.innerHTML = state.cities.map(c => `
+          <a href="#smma/${c.state_slug}/${c.slug}" onclick="navigateTo('city-listing', {stateSlug: '${c.state_slug}', citySlug: '${c.slug}'}); toggleMobileNav();" class="p-2 bg-slate-50 rounded-lg text-slate-700 font-medium text-xs">
+            ${c.name}
+          </a>
+        `).join('');
+      }
+    }
+
+    function populateFooterCities() {
+      const footerList = document.getElementById('footer-cities-list');
+      if (footerList) {
+        footerList.innerHTML = state.cities.map(c => `
+          <li>
+            <a href="#smma/${c.state_slug}/${c.slug}" onclick="navigateTo('city-listing', {stateSlug: '${c.state_slug}', citySlug: '${c.slug}'})" class="hover:text-white transition">
+              SMMAs in ${c.name}
+            </a>
+          </li>
+        `).join('');
+      }
+    }
+
+    function onHeroStateChange() {
+      const heroState = document.getElementById('hero-state-select');
+      const heroCity = document.getElementById('hero-city-select');
+      if (!heroState || !heroCity) return;
+
+      const stateId = heroState.value;
+      const filtered = stateId ? state.cities.filter(c => c.state_id === stateId) : state.cities;
+
+      heroCity.innerHTML = '<option value="">Select a City</option>' + filtered.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+      if (filtered.length > 0) heroCity.value = filtered[0].slug;
+    }
+
+    function onFilterStateChange() {
+      const filterState = document.getElementById('filter-state');
+      const filterCity = document.getElementById('filter-city');
+      if (!filterState || !filterCity) return;
+
+      const stateId = filterState.value;
+      const filtered = state.cities.filter(c => c.state_id === stateId);
+      
+      filterCity.innerHTML = filtered.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+      if (filtered.length > 0) {
+        filterCity.value = filtered[0].slug;
+        onFilterCityChange();
+      }
+    }
+
+    function onFilterCityChange() {
+      const filterCity = document.getElementById('filter-city');
+      const city = state.cities.find(c => c.slug === filterCity.value);
+      if (city) {
+        window.location.hash = `#smma/${city.state_slug}/${city.slug}`;
+        applyFilters();
+      }
+    }
+
+    function onRegStateChange() {
+      const regState = document.getElementById('reg-state');
+      const regCity = document.getElementById('reg-city');
+      if (!regState || !regCity) return;
+
+      const stateId = regState.value;
+      const filtered = state.cities.filter(c => c.state_id === stateId);
+      regCity.innerHTML = filtered.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+
+    function handleHeroSearch(e) {
+      e.preventDefault();
+      const citySelect = document.getElementById('hero-city-select');
+      const citySlug = citySelect.value || 'mumbai';
+      const city = state.cities.find(c => c.slug === citySlug) || state.cities[1];
+      navigateTo('city-listing', { stateSlug: city.state_slug, citySlug: city.slug });
+    }
+
+    function populateServicesCheckboxes() {
+      const container = document.getElementById('filter-services-list');
+      const regContainer = document.getElementById('reg-services-container');
+
+      if (container) {
+        container.innerHTML = state.services.map(s => `
+          <label class="flex items-center gap-2 cursor-pointer hover:text-slate-900">
+            <input type="checkbox" name="filter-service" value="${s.id}" onchange="applyFilters()" class="rounded border-slate-300 text-brand-900 focus:ring-brand-900">
+            <span>${s.name}</span>
+          </label>
+        `).join('');
+      }
+
+      if (regContainer) {
+        regContainer.innerHTML = state.services.map(s => `
+          <label class="flex items-center gap-2 p-2 bg-slate-50 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-100">
+            <input type="checkbox" name="reg-services" value="${s.id}" class="rounded border-slate-300 text-brand-900">
+            <span>${s.name}</span>
+          </label>
+        `).join('');
+      }
+    }
+
+    /**
+     * =========================================================================
+     * HOME PAGE RENDERING
+     * =========================================================================
+     */
+    function renderHomePopularCities() {
+      const grid = document.getElementById('home-cities-grid');
+      if (!grid) return;
+
+      grid.innerHTML = state.cities.map(c => {
+        const count = state.agencies.filter(a => a.city_id === c.id).length;
+        return `
+          <a href="#smma/${c.state_slug}/${c.slug}" onclick="navigateTo('city-listing', {stateSlug: '${c.state_slug}', citySlug: '${c.slug}'})" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-900 hover:shadow-md transition group flex flex-col justify-between">
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-lg bg-brand-50 text-brand-900 flex items-center justify-center font-bold text-xs group-hover:bg-brand-900 group-hover:text-white transition">
+                📍
+              </span>
+              <span class="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full">Live</span>
+            </div>
+            <div>
+              <h3 class="font-display font-bold text-slate-900 text-base group-hover:text-brand-900 transition">${c.name}</h3>
+              <p class="text-xs text-slate-500 mt-0.5">${count} Vetted Agencies</p>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+
+    function renderHomeFeaturedAgencies() {
+      const grid = document.getElementById('home-featured-grid');
+      if (!grid) return;
+
+      const featured = state.agencies.filter(a => a.is_featured);
+
+      grid.innerHTML = featured.map(a => {
+        const city = state.cities.find(c => c.id === a.city_id);
+        const serviceNames = (a.services || []).map(sid => {
+          const s = state.services.find(srv => srv.id === sid);
+          return s ? s.name : '';
+        }).filter(Boolean).slice(0, 3);
+
+        return `
+          <div class="bg-white rounded-2xl border border-amber-200/80 shadow-md p-6 flex flex-col justify-between relative overflow-hidden group hover:border-amber-400 transition">
+            <div class="absolute top-0 right-0 bg-amber-500 text-white font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-bl-xl shadow-sm">
+              Featured SMMA
+            </div>
+
+            <div>
+              <div class="flex items-start gap-3.5 mb-4">
+                <img src="${a.logo_url}" alt="${a.name}" class="w-14 h-14 rounded-xl object-cover border border-slate-200 bg-slate-50 shrink-0" onerror="this.src='https://placehold.co/100x100/1e3a8a/ffffff?text=SMMA'">
+                <div>
+                  <h3 class="font-bold text-slate-950 text-base flex items-center gap-1.5">
+                    ${a.name}
+                    ${a.is_verified ? '<span class="text-brand-900 text-xs" title="Verified SMMA">✓</span>' : ''}
+                  </h3>
+                  <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                    <span class="text-amber-500 font-bold">★ ${a.avg_rating}</span>
+                    <span>(${a.review_count} reviews)</span>
+                    <span>•</span>
+                    <span>${city ? city.name : ''}</span>
+                  </div>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-600 line-clamp-2 mb-4">${a.tagline}</p>
+
+              <div class="flex flex-wrap gap-1.5 mb-5">
+                ${serviceNames.map(s => `<span class="bg-slate-100 text-slate-700 text-[10px] font-medium px-2 py-0.5 rounded">${s}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] text-slate-400 uppercase font-semibold block">Starting from</span>
+                <span class="text-sm font-bold text-brand-900">₹${a.starting_price.toLocaleString('en-IN')}<span class="text-[11px] font-normal text-slate-500">/mo</span></span>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="navigateTo('agency-profile', {agencySlug: '${a.slug}'})" class="px-3 py-1.5 bg-brand-900 text-white text-xs font-semibold rounded-lg hover:bg-brand-800 transition">
+                  View Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    /**
+     * =========================================================================
+     * CITY LISTING VIEW LOGIC & REAL-TIME FILTERS
+     * =========================================================================
+     */
+    function renderCityListingView(stateSlug, citySlug) {
+      let targetCity = state.cities.find(c => c.slug === citySlug);
+      if (!targetCity) targetCity = state.cities[1]; // default Mumbai
+
+      const targetState = state.states.find(s => s.id === targetCity.state_id);
+
+      state.activeCity = targetCity;
+      state.activeState = targetState;
+
+      // Update Breadcrumbs & Headings
+      document.getElementById('listing-breadcrumb-state').textContent = targetState ? targetState.name : 'State';
+      document.getElementById('listing-breadcrumb-city').textContent = targetCity.name;
+      document.getElementById('city-listing-city-name').textContent = targetCity.name;
+      document.getElementById('filtered-city-label').textContent = targetCity.name;
+
+      // Sync filter selects
+      const filterStateSelect = document.getElementById('filter-state');
+      const filterCitySelect = document.getElementById('filter-city');
+
+      if (filterStateSelect) filterStateSelect.value = targetCity.state_id;
+      if (filterCitySelect) {
+        const filteredCities = state.cities.filter(c => c.state_id === targetCity.state_id);
+        filterCitySelect.innerHTML = filteredCities.map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+        filterCitySelect.value = targetCity.slug;
+      }
+
+      // Update SEO
+      updateSEOMeta(
+        `Best Social Media Agencies in ${targetCity.name} (2026 Directory) | SMMA India`,
+        `Find and compare the top ranked social media agencies in ${targetCity.name}. Verified client reviews, direct WhatsApp access, and free quotes.`
+      );
+      window.location.hash = `#smma/${targetCity.state_slug}/${targetCity.slug}`;
+
+      // Execute Filter
+      applyFilters();
+    }
+
+    function onFilterPriceChange(value) {
+      const label = document.getElementById('price-slider-label');
+      if (label) {
+        label.textContent = value >= 150000 ? 'Any Starting Budget' : `Up to ₹${parseInt(value).toLocaleString('en-IN')}`;
+      }
+      applyFilters();
+    }
+
+    function resetFilters() {
+      const priceSlider = document.getElementById('filter-price-range');
+      if (priceSlider) priceSlider.value = 150000;
+      onFilterPriceChange(150000);
+
+      document.querySelectorAll('input[name="rating-filter"]').forEach(cb => cb.checked = false);
+      document.querySelectorAll('input[name="filter-service"]').forEach(cb => cb.checked = false);
+      
+      const verifiedCb = document.getElementById('filter-verified');
+      if (verifiedCb) verifiedCb.checked = false;
+
+      const sortDropdown = document.getElementById('sort-dropdown');
+      if (sortDropdown) sortDropdown.value = 'rank';
+
+      applyFilters();
+      showToast('Filters reset to default.');
+    }
+
+    function applyFilters() {
+      if (!state.activeCity) return;
+
+      const currentCityId = state.activeCity.id;
+      const maxPrice = parseInt(document.getElementById('filter-price-range')?.value || 150000);
+      const verifiedOnly = document.getElementById('filter-verified')?.checked || false;
+      const sortType = document.getElementById('sort-dropdown')?.value || 'rank';
+
+      // Gather rating filters
+      const checkedRatings = Array.from(document.querySelectorAll('input[name="rating-filter"]:checked')).map(cb => parseFloat(cb.value));
+      const minRating = checkedRatings.length > 0 ? Math.min(...checkedRatings) : 0;
+
+      // Gather service filters
+      const checkedServices = Array.from(document.querySelectorAll('input[name="filter-service"]:checked')).map(cb => cb.value);
+
+      // Base query: match city and status published
+      let results = state.agencies.filter(a => a.city_id === currentCityId && a.status !== 'draft');
+
+      // Price Filter
+      if (maxPrice < 150000) {
+        results = results.filter(a => a.starting_price <= maxPrice);
+      }
+
+      // Verified Filter
+      if (verifiedOnly) {
+        results = results.filter(a => a.is_verified);
+      }
+
+      // Rating Filter
+      if (minRating > 0) {
+        results = results.filter(a => (a.avg_rating || 0) >= minRating);
+      }
+
+      // Services Filter (agency must offer ALL selected services)
+      if (checkedServices.length > 0) {
+        results = results.filter(a => {
+          return checkedServices.every(srvId => (a.services || []).includes(srvId));
+        });
+      }
+
+      // Split Featured vs Organic Ranked Agencies
+      // Requirement: "excluding featured/sponsored agencies from this ranking (they show separately at the top, clearly labeled 'Featured')"
+      const featuredAgencies = results.filter(a => a.is_featured);
+      let rankedAgencies = results.filter(a => !a.is_featured);
+
+      // Apply Sort on Ranked Agencies
+      rankedAgencies.sort((a, b) => {
+        if (sortType === 'rank') return b.rank_score - a.rank_score;
+        if (sortType === 'rating') return (b.avg_rating || 0) - (a.avg_rating || 0);
+        if (sortType === 'reviews') return (b.review_count || 0) - (a.review_count || 0);
+        if (sortType === 'price-asc') return a.starting_price - b.starting_price;
+        if (sortType === 'price-desc') return b.starting_price - a.starting_price;
+        if (sortType === 'newest') return b.founded_year - a.founded_year;
+        return b.rank_score - a.rank_score;
+      });
+
+      // Update count
+      const countEl = document.getElementById('filtered-agency-count');
+      if (countEl) countEl.textContent = results.length;
+
+      // Render Featured Container
+      renderFeaturedListingSection(featuredAgencies);
+
+      // Render Ranked Container
+      renderRankedListingSection(rankedAgencies);
+
+      // Update mobile badge
+      const activeFilterCount = (maxPrice < 150000 ? 1 : 0) + (verifiedOnly ? 1 : 0) + (checkedRatings.length > 0 ? 1 : 0) + checkedServices.length;
+      const mBadge = document.getElementById('mobile-filter-badge');
+      if (mBadge) {
+        if (activeFilterCount > 0) {
+          mBadge.textContent = activeFilterCount;
+          mBadge.classList.remove('hidden');
+        } else {
+          mBadge.classList.add('hidden');
+        }
+      }
+    }
+
+    function renderFeaturedListingSection(featured) {
+      const wrapper = document.getElementById('listing-featured-wrapper');
+      const container = document.getElementById('listing-featured-container');
+      if (!wrapper || !container) return;
+
+      if (featured.length === 0) {
+        wrapper.classList.add('hidden');
+        container.innerHTML = '';
+        return;
+      }
+
+      wrapper.classList.remove('hidden');
+      container.innerHTML = featured.map(a => renderAgencyCardHTML(a, null, true)).join('');
+    }
+
+    function renderRankedListingSection(ranked) {
+      const container = document.getElementById('listing-results-container');
+      const emptyState = document.getElementById('listing-empty-state');
+      if (!container || !emptyState) return;
+
+      if (ranked.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      container.innerHTML = ranked.map((a, index) => renderAgencyCardHTML(a, index + 1, false)).join('');
+    }
+
+    function renderAgencyCardHTML(agency, rankNumber, isFeatured) {
+      const city = state.cities.find(c => c.id === agency.city_id);
+      const isComparing = state.compareList.includes(agency.id);
+
+      const serviceTags = (agency.services || []).map(sid => {
+        const s = state.services.find(item => item.id === sid);
+        return s ? `<span class="bg-slate-100 text-slate-700 text-[11px] font-medium px-2 py-0.5 rounded">${s.name}</span>` : '';
+      }).filter(Boolean).join('');
+
+      const borderClass = isFeatured ? 'border-2 border-amber-300 bg-amber-50/20' : 'border border-slate-200 bg-white';
+
+      return `
+        <div class="rounded-2xl p-5 ${borderClass} shadow-sm hover:shadow-md transition relative group flex flex-col md:flex-row gap-5 items-start justify-between">
+          
+          <div class="flex items-start gap-4 flex-1">
+            <!-- Rank Badge or Featured Pin -->
+            <div class="shrink-0 flex flex-col items-center">
+              ${isFeatured ? `
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs flex items-center justify-center shadow-xs" title="Featured Partner Agency">
+                  ★
+                </div>
+              ` : `
+                <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-800 border border-slate-200 font-display font-bold text-sm flex items-center justify-center">
+                  #${rankNumber}
+                </div>
+                <span class="text-[9px] text-slate-400 font-mono mt-1">RANK</span>
+              `}
+            </div>
+
+            <!-- Logo -->
+            <img src="${agency.logo_url}" alt="${agency.name}" class="w-16 h-16 sm:w-20 sm:h-20 rounded-xl object-cover border border-slate-200 bg-slate-50 shrink-0" onerror="this.src='https://placehold.co/100x100/1e3a8a/ffffff?text=SMMA'">
+
+            <!-- Details -->
+            <div class="flex-1 min-w-0">
+              <div class="flex flex-wrap items-center gap-2">
+                <a href="#agency/${agency.slug}" onclick="navigateTo('agency-profile', {agencySlug: '${agency.slug}'})" class="font-display font-bold text-lg text-slate-900 hover:text-brand-900 transition">
+                  ${agency.name}
+                </a>
+
+                ${agency.is_verified ? `
+                  <span class="badge-verified text-white text-[10px] font-bold px-2 py-0.5 rounded-full inline-flex items-center gap-1">
+                    ✓ Verified
+                  </span>
+                ` : ''}
+
+                ${isFeatured ? `
+                  <span class="bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    Featured
+                  </span>
+                ` : ''}
+              </div>
+
+              <!-- Rating & City line -->
+              <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1">
+                <span class="text-amber-500 font-bold">★ ${agency.avg_rating}</span>
+                <span>(${agency.review_count} reviews)</span>
+                <span>•</span>
+                <span>${city ? city.name : ''}</span>
+                <span>•</span>
+                <span class="text-brand-900 font-semibold font-mono">Score: ${agency.rank_score}/100</span>
+              </div>
+
+              <p class="text-xs text-slate-600 mt-2 line-clamp-2">${agency.tagline}</p>
+
+              <!-- Services tags -->
+              <div class="flex flex-wrap gap-1.5 mt-3">
+                ${serviceTags}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Action Box -->
+          <div class="w-full md:w-48 shrink-0 flex flex-col justify-between items-start md:items-end border-t md:border-t-0 md:border-l border-slate-100 pt-3 md:pt-0 md:pl-5 self-stretch">
+            <div class="text-left md:text-right mb-3">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Starting Retainer</span>
+              <div class="text-base font-extrabold text-brand-900">
+                ₹${agency.starting_price.toLocaleString('en-IN')}<span class="text-xs font-normal text-slate-500">/mo</span>
+              </div>
+            </div>
+
+            <div class="w-full space-y-2">
+              <button onclick="navigateTo('agency-profile', {agencySlug: '${agency.slug}'})" class="w-full py-2 bg-brand-900 hover:bg-brand-800 text-white font-bold text-xs rounded-xl transition text-center shadow-xs">
+                View Details
+              </button>
+
+              <button onclick="toggleCompareAgency('${agency.id}')" class="w-full py-1.5 ${isComparing ? 'bg-brand-50 text-brand-900 border-brand-300' : 'bg-slate-50 text-slate-700 border-slate-200'} hover:bg-slate-100 border text-xs font-semibold rounded-lg transition text-center flex items-center justify-center gap-1">
+                <span>${isComparing ? '✓ Comparing' : '+ Compare'}</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `;
+    }
+
+    function toggleMobileFilterDrawer(show) {
+      const drawer = document.getElementById('mobile-filter-drawer');
+      const content = document.getElementById('mobile-filter-content');
+      const desktopSidebar = document.getElementById('filters-sidebar');
+      if (!drawer) return;
+
+      if (show) {
+        drawer.classList.remove('hidden');
+        if (content && desktopSidebar) {
+          content.innerHTML = desktopSidebar.innerHTML;
+        }
+      } else {
+        drawer.classList.add('hidden');
+      }
+    }
+
+    /**
+     * =========================================================================
+     * AGENCY PROFILE VIEW LOGIC & LEAD CAPTURE
+     * =========================================================================
+     */
+    function renderAgencyProfileView(agencySlug) {
+      const agency = state.agencies.find(a => a.slug === agencySlug) || state.agencies[0];
+      state.activeAgency = agency;
+
+      const city = state.cities.find(c => c.id === agency.city_id);
+      const st = state.states.find(s => s.id === agency.state_id);
+
+      // Set Header Details
+      document.getElementById('profile-name').textContent = agency.name;
+      document.getElementById('profile-tagline').textContent = agency.tagline;
+      document.getElementById('profile-logo').src = agency.logo_url;
+      document.getElementById('profile-rating').textContent = agency.avg_rating;
+      document.getElementById('profile-reviews-count').textContent = `(${agency.review_count} reviews)`;
+      document.getElementById('profile-location').textContent = `${city ? city.name : ''}, ${st ? st.name : ''}`;
+      document.getElementById('profile-team-size').textContent = agency.team_size || '10-25';
+      document.getElementById('profile-founded').textContent = agency.founded_year || '2021';
+      document.getElementById('profile-rank-score').textContent = agency.rank_score;
+
+      // Badges
+      const verifiedBadge = document.getElementById('profile-verified-badge');
+      if (verifiedBadge) verifiedBadge.style.display = agency.is_verified ? 'inline-flex' : 'none';
+
+      const featuredBadge = document.getElementById('profile-featured-badge');
+      if (featuredBadge) featuredBadge.style.display = agency.is_featured ? 'inline-flex' : 'none';
+
+      // Social Links (Website, Instagram, LinkedIn, WhatsApp wa.me)
+      const webBtn = document.getElementById('profile-website-btn');
+      if (webBtn) webBtn.href = agency.website_url || '#';
+
+      const igBtn = document.getElementById('profile-instagram-btn');
+      if (igBtn) igBtn.href = agency.instagram_url || '#';
+
+      const liBtn = document.getElementById('profile-linkedin-btn');
+      if (liBtn) liBtn.href = agency.linkedin_url || '#';
+
+      // WhatsApp link with wa.me and pre-filled inquiry text
+      const waBtn = document.getElementById('profile-whatsapp-btn');
+      if (waBtn) {
+        const cleanNumber = (agency.whatsapp || '919820011223').replace(/\D/g, '');
+        const message = encodeURIComponent(`Hi ${agency.name}, I found your agency profile on SMMA India and would like to discuss our monthly social media requirements.`);
+        waBtn.href = `https://wa.me/${cleanNumber}?text=${message}`;
+      }
+
+      // About & Description
+      document.getElementById('profile-description').textContent = agency.description;
+      document.getElementById('profile-address').textContent = agency.address || 'Address provided upon inquiry';
+      document.getElementById('profile-languages').textContent = agency.languages || 'English, Hindi';
+      document.getElementById('profile-price-highlight').textContent = `₹${agency.starting_price.toLocaleString('en-IN')}/mo`;
+
+      // Services Chips
+      const servicesChipContainer = document.getElementById('profile-services-chips');
+      if (servicesChipContainer) {
+        servicesChipContainer.innerHTML = (agency.services || []).map(sid => {
+          const s = state.services.find(item => item.id === sid);
+          return s ? `<span class="bg-brand-50 text-brand-900 border border-brand-200 text-xs font-semibold px-3 py-1 rounded-lg">${s.name}</span>` : '';
+        }).join('');
+      }
+
+      // Industries Chips
+      const industriesContainer = document.getElementById('profile-industries-chips');
+      if (industriesContainer) {
+        industriesContainer.innerHTML = (agency.industries || []).map(indId => {
+          const ind = state.industries.find(item => item.id === indId);
+          return ind ? `<span class="bg-slate-100 text-slate-800 text-xs font-semibold px-3 py-1 rounded-lg">${ind.name}</span>` : '';
+        }).join('');
+      }
+
+      // Set Agency Id in Quote Form
+      document.getElementById('lead-agency-id').value = agency.id;
+
+      // Populate Reviews
+      renderAgencyReviews(agency.id);
+
+      // Populate Similar Agencies (3 in same city)
+      renderSimilarAgencies(agency);
+
+      // Breadcrumb link
+      document.getElementById('profile-back-label').textContent = `Back to ${city ? city.name : 'city'} agencies`;
+
+      // Update SEO
+      updateSEOMeta(
+        `${agency.name} (${city ? city.name : ''}) - Pricing, Reviews & Services | SMMA India`,
+        `${agency.tagline}. Starting at ₹${agency.starting_price}/mo. Get a direct quote or connect via WhatsApp on SMMA India.`
+      );
+      window.location.hash = `#agency/${agency.slug}`;
+    }
+
+    function renderAgencyReviews(agencyId) {
+      const container = document.getElementById('profile-reviews-list');
+      if (!container) return;
+
+      const reviews = state.reviews.filter(r => r.agency_id === agencyId);
+
+      if (reviews.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 bg-slate-50 rounded-xl text-center border border-slate-100">
+            <p class="text-xs text-slate-500">No client reviews submitted yet. Be the first brand to leave a rating!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = reviews.map(r => `
+        <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-slate-900 text-xs">${r.reviewer_name}</span>
+              ${r.is_verified ? '<span class="text-[10px] text-emerald-700 bg-emerald-100 px-1.5 rounded font-semibold">Verified Client</span>' : ''}
+            </div>
+            <div class="text-amber-500 text-xs">
+              ${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}
+            </div>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">${r.comment}</p>
+          <span class="text-[10px] text-slate-400 block">${r.created_at || 'Recent client'}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderSimilarAgencies(currentAgency) {
+      const grid = document.getElementById('profile-similar-grid');
+      const label = document.getElementById('similar-agencies-city-label');
+      if (!grid) return;
+
+      const city = state.cities.find(c => c.id === currentAgency.city_id);
+      if (label && city) label.textContent = city.name;
+
+      const similar = state.agencies
+        .filter(a => a.city_id === currentAgency.city_id && a.id !== currentAgency.id)
+        .slice(0, 3);
+
+      if (similar.length === 0) {
+        grid.innerHTML = '<p class="text-xs text-slate-400 col-span-3">No other agencies currently listed in this city.</p>';
+        return;
+      }
+
+      grid.innerHTML = similar.map(a => `
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-brand-900 transition flex flex-col justify-between">
+          <div>
+            <div class="flex items-start gap-3 mb-3">
+              <img src="${a.logo_url}" alt="${a.name}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 bg-slate-50 shrink-0">
+              <div>
+                <h4 class="font-bold text-slate-900 text-sm">${a.name}</h4>
+                <div class="text-amber-500 font-bold text-xs mt-0.5">★ ${a.avg_rating} <span class="text-slate-400 font-normal">(${a.review_count})</span></div>
+              </div>
+            </div>
+            <p class="text-xs text-slate-600 line-clamp-2">${a.tagline}</p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-bold text-brand-900">₹${a.starting_price.toLocaleString('en-IN')}/mo</span>
+            <button onclick="navigateTo('agency-profile', {agencySlug: '${a.slug}'})" class="text-xs text-brand-900 font-semibold hover:underline">
+              View Profile →
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function goBackToCity() {
+      if (state.activeCity) {
+        navigateTo('city-listing', { stateSlug: state.activeCity.state_slug, citySlug: state.activeCity.slug });
+      } else {
+        navigateTo('home');
+      }
+    }
+
+    /**
+     * LEAD SUBMISSION HANDLER (Inserts into Supabase `leads` table)
+     */
+    async function handleLeadSubmit(e) {
+      e.preventDefault();
+      const agencyId = document.getElementById('lead-agency-id').value;
+      const clientName = document.getElementById('lead-name').value;
+      const phone = document.getElementById('lead-phone').value;
+      const email = document.getElementById('lead-email').value;
+      const businessType = document.getElementById('lead-business-type').value;
+      const budget = document.getElementById('lead-budget').value;
+      const message = document.getElementById('lead-message').value;
+
+      const leadPayload = {
+        agency_id: agencyId,
+        client_name: clientName,
+        phone: phone,
+        email: email,
+        business_type: businessType,
+        budget: budget,
+        message: message,
+        created_at: new Date().toISOString()
+      };
+
+      // 1. Save to local state memory
+      LEADS_STORAGE.push(leadPayload);
+
+      // 2. If Supabase is connected, insert directly into `leads` table
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from('leads').insert([leadPayload]);
+          if (error) console.warn('Supabase lead insert notice:', error);
+        } catch (err) {
+          console.warn('Supabase error:', err);
+        }
+      }
+
+      showToast(`Thank you, ${clientName}! Your enquiry has been sent to the agency founder.`);
+      document.getElementById('lead-quote-form').reset();
+    }
+
+    /**
+     * =========================================================================
+     * LIST YOUR AGENCY VIEW (Inserts with status = 'draft')
+     * =========================================================================
+     */
+    async function handleListAgencySubmit(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('reg-name').value;
+      const tagline = document.getElementById('reg-tagline').value;
+      const stateId = document.getElementById('reg-state').value;
+      const cityId = document.getElementById('reg-city').value;
+      const address = document.getElementById('reg-address').value;
+      const website = document.getElementById('reg-website').value;
+      const instagram = document.getElementById('reg-instagram').value;
+      const whatsapp = document.getElementById('reg-whatsapp').value;
+      const email = document.getElementById('reg-email').value;
+      const startingPrice = parseFloat(document.getElementById('reg-price-min').value);
+      const teamSize = document.getElementById('reg-team-size').value;
+      const foundedYear = parseInt(document.getElementById('reg-founded').value);
+      const description = document.getElementById('reg-description').value;
+
+      const selectedServices = Array.from(document.querySelectorAll('input[name="reg-services"]:checked')).map(cb => cb.value);
+
+      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(Math.random() * 1000);
+
+      const newAgency = {
+        id: 'ag-' + Date.now(),
+        name,
+        slug,
+        logo_url: `https://placehold.co/200x200/1e3a8a/ffffff?text=${encodeURIComponent(name.slice(0, 4))}`,
+        tagline,
+        description,
+        state_id: stateId,
+        city_id: cityId,
+        address,
+        starting_price: startingPrice,
+        price_max: startingPrice * 3,
+        team_size: teamSize,
+        founded_year: foundedYear,
+        languages: 'English, Hindi',
+        instagram_url: instagram,
+        website_url: website,
+        whatsapp,
+        phone: '+' + whatsapp,
+        email,
+        is_verified: false,
+        is_featured: false,
+        avg_rating: 5.0,
+        review_count: 1,
+        status: 'draft', // Critical requirement: saved as draft
+        services: selectedServices,
+        created_at: new Date().toISOString()
+      };
+
+      newAgency.rank_score = computeAgencyRankScore(newAgency);
+
+      // Append to local state
+      state.agencies.push(newAgency);
+
+      // Attempt Supabase insert
+      if (supabaseClient) {
+        try {
+          const { error } = await supabaseClient.from('agencies').insert([newAgency]);
+          if (error) console.warn('Supabase draft agency insert:', error);
+        } catch (err) {
+          console.warn('Supabase insert draft error:', err);
+        }
+      }
+
+      showToast(`Success! "${name}" submitted for editorial review with status = 'draft'.`);
+      e.target.reset();
+
+      setTimeout(() => {
+        navigateTo('home');
+      }, 2000);
+    }
+
+    /**
+     * =========================================================================
+     * COMPARE VIEW LOGIC
+     * =========================================================================
+     */
+    function toggleCompareAgency(agencyId) {
+      if (state.compareList.includes(agencyId)) {
+        state.compareList = state.compareList.filter(id => id !== agencyId);
+        showToast('Removed from comparison list.');
+      } else {
+        if (state.compareList.length >= 3) {
+          showToast('You can compare a maximum of 3 agencies simultaneously.', 'info');
+          return;
+        }
+        state.compareList.push(agencyId);
+        showToast('Added to comparison! Click Compare in the top navigation.');
+      }
+
+      updateCompareBadge();
+      if (state.currentView === 'city-listing') {
+        applyFilters();
+      }
+    }
+
+    function updateCompareBadge() {
+      const badge = document.getElementById('compare-count-badge');
+      if (!badge) return;
+
+      if (state.compareList.length > 0) {
+        badge.textContent = state.compareList.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function clearCompareList() {
+      state.compareList = [];
+      updateCompareBadge();
+      renderCompareView();
+      showToast('Comparison list cleared.');
+    }
+
+    function addSelectedToCompare() {
+      const select = document.getElementById('compare-add-select');
+      if (!select || !select.value) return;
+
+      toggleCompareAgency(select.value);
+      renderCompareView();
+    }
+
+    function renderCompareView() {
+      const tableWrapper = document.getElementById('compare-table-wrapper');
+      const emptyState = document.getElementById('compare-empty-state');
+      const select = document.getElementById('compare-add-select');
+
+      if (!tableWrapper || !emptyState) return;
+
+      // Populate selector dropdown
+      if (select) {
+        select.innerHTML = '<option value="">Select an agency...</option>' + 
+          state.agencies
+            .filter(a => !state.compareList.includes(a.id))
+            .map(a => `<option value="${a.id}">${a.name} (${state.cities.find(c => c.id === a.city_id)?.name})</option>`)
+            .join('');
+      }
+
+      if (state.compareList.length === 0) {
+        tableWrapper.innerHTML = '';
+        tableWrapper.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      tableWrapper.classList.remove('hidden');
+      emptyState.classList.add('hidden');
+
+      const comparedAgencies = state.compareList.map(id => state.agencies.find(a => a.id === id)).filter(Boolean);
+
+      tableWrapper.innerHTML = `
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-slate-200 bg-slate-50/70">
+              <th class="p-4 w-48 font-bold text-slate-500 uppercase tracking-wider text-[11px]">Agency Feature</th>
+              ${comparedAgencies.map(a => `
+                <th class="p-4 min-w-[220px]">
+                  <div class="flex items-center justify-between">
+                    <span class="font-display font-bold text-sm text-slate-900">${a.name}</span>
+                    <button onclick="toggleCompareAgency('${a.id}'); renderCompareView();" class="text-rose-500 hover:text-rose-700 text-xs font-bold" title="Remove">✕</button>
+                  </div>
+                  <span class="text-[11px] text-slate-500 font-normal">${state.cities.find(c => c.id === a.city_id)?.name}</span>
+                </th>
+              `).join('')}
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100">
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Verification & Score</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    ${a.is_verified ? '<span class="badge-verified text-white px-2 py-0.5 rounded text-[10px] font-bold">✓ Verified</span>' : '<span class="text-slate-400">Standard</span>'}
+                    <span class="font-mono font-bold text-brand-900">${a.rank_score}/100</span>
+                  </div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Client Rating</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4">
+                  <span class="text-amber-500 font-bold">★ ${a.avg_rating}</span>
+                  <span class="text-slate-400">(${a.review_count} reviews)</span>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Starting Price</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4 font-extrabold text-brand-900 text-sm">
+                  ₹${a.starting_price.toLocaleString('en-IN')}<span class="text-xs font-normal text-slate-500">/mo</span>
+                </td>
+              `).join('')}
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Team Size</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4 font-medium text-slate-700">${a.team_size || 'N/A'}</td>
+              `).join('')}
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Founded</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4 font-medium text-slate-700">${a.founded_year || 'N/A'}</td>
+              `).join('')}
+            </tr>
+            <tr>
+              <td class="p-4 font-bold text-slate-700">Services Offered</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4">
+                  <div class="flex flex-wrap gap-1">
+                    ${(a.services || []).map(sid => {
+                      const s = state.services.find(item => item.id === sid);
+                      return s ? `<span class="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded">${s.name}</span>` : '';
+                    }).join('')}
+                  </div>
+                </td>
+              `).join('')}
+            </tr>
+            <tr class="bg-slate-50/50">
+              <td class="p-4 font-bold text-slate-700">Action</td>
+              ${comparedAgencies.map(a => `
+                <td class="p-4">
+                  <button onclick="navigateTo('agency-profile', {agencySlug: '${a.slug}'})" class="w-full py-2 bg-brand-900 text-white font-bold text-xs rounded-lg hover:bg-brand-800 transition">
+                    View Profile & Quote
+                  </button>
+                </td>
+              `).join('')}
+            </tr>
+          </tbody>
+        </table>
+      `;
+    }
+
+    /**
+     * =========================================================================
+     * REVIEW SUBMISSION MODAL HANDLER
+     * =========================================================================
+     */
+    function openReviewModal() {
+      document.getElementById('review-modal').classList.remove('hidden');
+    }
+
+    function closeReviewModal() {
+      document.getElementById('review-modal').classList.add('hidden');
+    }
+
+    async function handleReviewSubmit(e) {
+      e.preventDefault();
+      if (!state.activeAgency) return;
+
+      const reviewerName = document.getElementById('rev-name').value;
+      const reviewerEmail = document.getElementById('rev-email').value;
+      const rating = parseInt(document.getElementById('rev-rating').value);
+      const comment = document.getElementById('rev-comment').value;
+
+      const newReview = {
+        id: 'rev-' + Date.now(),
+        agency_id: state.activeAgency.id,
+        reviewer_name: reviewerName,
+        reviewer_email: reviewerEmail,
+        rating,
+        comment,
+        is_verified: true,
+        status: 'approved',
+        created_at: new Date().toISOString().split('T')[0]
+      };
+
+      state.reviews.unshift(newReview);
+
+      // Recompute agency review count & average rating
+      const agencyReviews = state.reviews.filter(r => r.agency_id === state.activeAgency.id);
+      const totalScore = agencyReviews.reduce((acc, curr) => acc + curr.rating, 0);
+      state.activeAgency.avg_rating = parseFloat((totalScore / agencyReviews.length).toFixed(1));
+      state.activeAgency.review_count = agencyReviews.length;
+      state.activeAgency.rank_score = computeAgencyRankScore(state.activeAgency);
+
+      // Try inserting to Supabase
+      if (supabaseClient) {
+        try {
+          await supabaseClient.from('reviews').insert([newReview]);
+        } catch (err) {
+          console.warn('Supabase review insert:', err);
+        }
+      }
+
+      renderAgencyReviews(state.activeAgency.id);
+      document.getElementById('profile-rating').textContent = state.activeAgency.avg_rating;
+      document.getElementById('profile-reviews-count').textContent = `(${state.activeAgency.review_count} reviews)`;
+      document.getElementById('profile-rank-score').textContent = state.activeAgency.rank_score;
+
+      closeReviewModal();
+      showToast('Thank you! Your verified review has been published.');
+      e.target.reset();
+    }
+
+    /**
+     * =========================================================================
+     * SUPABASE BACKEND MODAL CONTROLS
+     * =========================================================================
+     */
+    function openSupabaseModal() {
+      const modal = document.getElementById('supabase-modal');
+      const urlInput = document.getElementById('cfg-supabase-url');
+      const keyInput = document.getElementById('cfg-supabase-key');
+
+      if (urlInput) urlInput.value = localStorage.getItem('smma_supabase_url') || '';
+      if (keyInput) keyInput.value = localStorage.getItem('smma_supabase_key') || '';
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeSupabaseModal() {
+      document.getElementById('supabase-modal').classList.add('hidden');
+    }
+
+    function saveSupabaseConfig() {
+      const url = document.getElementById('cfg-supabase-url').value.trim();
+      const key = document.getElementById('cfg-supabase-key').value.trim();
+
+      if (!url || !key) {
+        showToast('Please provide both Project URL and Anon Public Key.', 'info');
+        return;
+      }
+
+      localStorage.setItem('smma_supabase_url', url);
+      localStorage.setItem('smma_supabase_key', key);
+
+      initSupabaseFromConfig();
+      showToast('Supabase configuration saved! Connected to Mumbai instance.');
+      closeSupabaseModal();
+    }
+
+    async function testSupabaseConnection() {
+      const url = document.getElementById('cfg-supabase-url').value.trim();
+      const key = document.getElementById('cfg-supabase-key').value.trim();
+
+      if (!url || !key) {
+        showToast('Enter URL & key first to test connection.', 'info');
+        return;
+      }
+
+      try {
+        const testClient = window.supabase.createClient(url, key);
+        const { data, error } = await testClient.from('cities').select('id, name').limit(1);
+        if (error) throw error;
+        showToast('Connection verified! Mumbai Supabase backend is live.');
+      } catch (err) {
+        showToast(`Connection test failed: ${err.message || 'Check tables & RLS policies'}`, 'info');
+      }
+    }
+
+    function copySQLScript() {
+      const textarea = document.getElementById('supabase-sql-snippet');
+      textarea.select();
+      document.execCommand('copy');
+      showToast('SQL Schema & Seed script copied to clipboard!');
+    }
+
+    function toggleMobileNav() {
+      const nav = document.getElementById('mobile-nav');
+      if (nav) nav.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>

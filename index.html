@@ -1992,6 +1992,69 @@
       }
     }
 
+    /**
+     * Fetches states, cities, services, industries, published agencies, and
+     * approved reviews from Supabase and replaces the local sample data with
+     * them. If Supabase has no data yet (or the fetch fails), the bundled
+     * sample data stays in place so the UI never breaks.
+     */
+    async function loadLiveDataFromSupabase() {
+      if (!supabaseClient) return;
+
+      try {
+        const [statesRes, citiesRes, servicesRes, industriesRes, agenciesRes] = await Promise.all([
+          supabaseClient.from('states').select('*'),
+          supabaseClient.from('cities').select('*'),
+          supabaseClient.from('services').select('*'),
+          supabaseClient.from('industries').select('*'),
+          supabaseClient.from('agencies').select('*').eq('status', 'published')
+        ]);
+
+        if (!statesRes.error && statesRes.data && statesRes.data.length) state.states = statesRes.data;
+        if (!citiesRes.error && citiesRes.data && citiesRes.data.length) state.cities = citiesRes.data;
+        if (!servicesRes.error && servicesRes.data && servicesRes.data.length) state.services = servicesRes.data;
+        if (!industriesRes.error && industriesRes.data && industriesRes.data.length) state.industries = industriesRes.data;
+
+        if (!agenciesRes.error && agenciesRes.data && agenciesRes.data.length) {
+          const agencyIds = agenciesRes.data.map(a => a.id);
+          const [asRes, aiRes] = await Promise.all([
+            supabaseClient.from('agency_services').select('agency_id, service_id').in('agency_id', agencyIds),
+            supabaseClient.from('agency_industries').select('agency_id, industry_id').in('agency_id', agencyIds)
+          ]);
+
+          const servicesByAgency = {};
+          if (!asRes.error && asRes.data) {
+            asRes.data.forEach(row => {
+              (servicesByAgency[row.agency_id] = servicesByAgency[row.agency_id] || []).push(row.service_id);
+            });
+          }
+          const industriesByAgency = {};
+          if (!aiRes.error && aiRes.data) {
+            aiRes.data.forEach(row => {
+              (industriesByAgency[row.agency_id] = industriesByAgency[row.agency_id] || []).push(row.industry_id);
+            });
+          }
+
+          state.agencies = agenciesRes.data.map(ag => {
+            const merged = {
+              ...ag,
+              services: servicesByAgency[ag.id] || [],
+              industries: industriesByAgency[ag.id] || []
+            };
+            merged.rank_score = computeAgencyRankScore(merged);
+            return merged;
+          });
+        }
+
+        const reviewsRes = await supabaseClient.from('reviews').select('*').eq('status', 'approved');
+        if (!reviewsRes.error && reviewsRes.data && reviewsRes.data.length) {
+          state.reviews = reviewsRes.data;
+        }
+      } catch (err) {
+        console.warn('Live data fetch failed, showing bundled sample data:', err);
+      }
+    }
+
     function updateBackendIndicator(isOk, text) {
       const pill = document.getElementById('backend-status-indicator');
       const label = document.getElementById('backend-status-text');
@@ -2264,8 +2327,9 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
      * INITIALIZATION & SEED RENDERING
      * =========================================================================
      */
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
       initSupabaseFromConfig();
+      await loadLiveDataFromSupabase();
       populateDropdowns();
       renderHomePopularCities();
       renderHomeFeaturedAgencies();
@@ -2497,8 +2561,8 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
                     ${a.is_verified ? '<span class="text-brand-900 text-xs" title="Verified SMMA">✓</span>' : ''}
                   </h3>
                   <div class="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
-                    <span class="text-amber-500 font-bold">★ ${a.avg_rating}</span>
-                    <span>(${a.review_count} reviews)</span>
+                    <span class="text-amber-500 font-bold">${a.avg_rating ? '★ ' + a.avg_rating : 'New listing'}</span>
+                    ${a.review_count ? `<span>(${a.review_count} reviews)</span>` : ''}
                     <span>•</span>
                     <span>${city ? city.name : ''}</span>
                   </div>
@@ -2515,7 +2579,7 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
             <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
               <div>
                 <span class="text-[10px] text-slate-400 uppercase font-semibold block">Starting from</span>
-                <span class="text-sm font-bold text-brand-900">₹${a.starting_price.toLocaleString('en-IN')}<span class="text-[11px] font-normal text-slate-500">/mo</span></span>
+                <span class="text-sm font-bold text-brand-900">${a.starting_price ? '₹' + a.starting_price.toLocaleString('en-IN') + '<span class="text-[11px] font-normal text-slate-500">/mo</span>' : 'Contact for pricing'}</span>
               </div>
               <div class="flex gap-2">
                 <button onclick="navigateTo('agency-profile', {agencySlug: '${a.slug}'})" class="px-3 py-1.5 bg-brand-900 text-white text-xs font-semibold rounded-lg hover:bg-brand-800 transition">
@@ -2759,8 +2823,8 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
 
               <!-- Rating & City line -->
               <div class="flex flex-wrap items-center gap-3 text-xs text-slate-500 mt-1">
-                <span class="text-amber-500 font-bold">★ ${agency.avg_rating}</span>
-                <span>(${agency.review_count} reviews)</span>
+                <span class="text-amber-500 font-bold">${agency.avg_rating ? '★ ' + agency.avg_rating : 'New listing'}</span>
+                ${agency.review_count ? `<span>(${agency.review_count} reviews)</span>` : ''}
                 <span>•</span>
                 <span>${city ? city.name : ''}</span>
                 <span>•</span>
@@ -2781,7 +2845,7 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
             <div class="text-left md:text-right mb-3">
               <span class="text-[10px] uppercase font-bold text-slate-400 block">Starting Retainer</span>
               <div class="text-base font-extrabold text-brand-900">
-                ₹${agency.starting_price.toLocaleString('en-IN')}<span class="text-xs font-normal text-slate-500">/mo</span>
+                ${agency.starting_price ? '₹' + agency.starting_price.toLocaleString('en-IN') + '<span class="text-xs font-normal text-slate-500">/mo</span>' : 'Contact for pricing'}
               </div>
             </div>
 
@@ -2832,8 +2896,8 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       document.getElementById('profile-name').textContent = agency.name;
       document.getElementById('profile-tagline').textContent = agency.tagline;
       document.getElementById('profile-logo').src = agency.logo_url;
-      document.getElementById('profile-rating').textContent = agency.avg_rating;
-      document.getElementById('profile-reviews-count').textContent = `(${agency.review_count} reviews)`;
+      document.getElementById('profile-rating').textContent = agency.avg_rating || 'New';
+      document.getElementById('profile-reviews-count').textContent = agency.review_count ? `(${agency.review_count} reviews)` : '(no reviews yet)';
       document.getElementById('profile-location').textContent = `${city ? city.name : ''}, ${st ? st.name : ''}`;
       document.getElementById('profile-team-size').textContent = agency.team_size || '10-25';
       document.getElementById('profile-founded').textContent = agency.founded_year || '2021';
@@ -2868,7 +2932,7 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       document.getElementById('profile-description').textContent = agency.description;
       document.getElementById('profile-address').textContent = agency.address || 'Address provided upon inquiry';
       document.getElementById('profile-languages').textContent = agency.languages || 'English, Hindi';
-      document.getElementById('profile-price-highlight').textContent = `₹${agency.starting_price.toLocaleString('en-IN')}/mo`;
+      document.getElementById('profile-price-highlight').textContent = agency.starting_price ? `₹${agency.starting_price.toLocaleString('en-IN')}/mo` : 'Contact for pricing';
 
       // Services Chips
       const servicesChipContainer = document.getElementById('profile-services-chips');
@@ -2964,13 +3028,13 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
               <img src="${a.logo_url}" alt="${a.name}" class="w-12 h-12 rounded-xl object-cover border border-slate-200 bg-slate-50 shrink-0">
               <div>
                 <h4 class="font-bold text-slate-900 text-sm">${a.name}</h4>
-                <div class="text-amber-500 font-bold text-xs mt-0.5">★ ${a.avg_rating} <span class="text-slate-400 font-normal">(${a.review_count})</span></div>
+                <div class="text-amber-500 font-bold text-xs mt-0.5">${a.avg_rating ? '★ ' + a.avg_rating + (a.review_count ? ` <span class="text-slate-400 font-normal">(${a.review_count})</span>` : '') : '<span class="text-slate-400 font-normal">New listing</span>'}</div>
               </div>
             </div>
             <p class="text-xs text-slate-600 line-clamp-2">${a.tagline}</p>
           </div>
           <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-            <span class="text-xs font-bold text-brand-900">₹${a.starting_price.toLocaleString('en-IN')}/mo</span>
+            <span class="text-xs font-bold text-brand-900">${a.starting_price ? '₹' + a.starting_price.toLocaleString('en-IN') + '/mo' : 'Contact for pricing'}</span>
             <button onclick="navigateTo('agency-profile', {agencySlug: '${a.slug}'})" class="text-xs text-brand-900 font-semibold hover:underline">
               View Profile →
             </button>
@@ -3217,8 +3281,8 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
               <td class="p-4 font-bold text-slate-700">Client Rating</td>
               ${comparedAgencies.map(a => `
                 <td class="p-4">
-                  <span class="text-amber-500 font-bold">★ ${a.avg_rating}</span>
-                  <span class="text-slate-400">(${a.review_count} reviews)</span>
+                  <span class="text-amber-500 font-bold">${a.avg_rating ? '★ ' + a.avg_rating : 'New listing'}</span>
+                  ${a.review_count ? `<span class="text-slate-400">(${a.review_count} reviews)</span>` : ''}
                 </td>
               `).join('')}
             </tr>
@@ -3226,7 +3290,7 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
               <td class="p-4 font-bold text-slate-700">Starting Price</td>
               ${comparedAgencies.map(a => `
                 <td class="p-4 font-extrabold text-brand-900 text-sm">
-                  ₹${a.starting_price.toLocaleString('en-IN')}<span class="text-xs font-normal text-slate-500">/mo</span>
+                  ${a.starting_price ? '₹' + a.starting_price.toLocaleString('en-IN') + '<span class="text-xs font-normal text-slate-500">/mo</span>' : 'Contact for pricing'}
                 </td>
               `).join('')}
             </tr>
@@ -3365,6 +3429,11 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       localStorage.setItem('smma_supabase_key', key);
 
       initSupabaseFromConfig();
+      loadLiveDataFromSupabase().then(() => {
+        populateDropdowns();
+        populateFooterCities();
+        navigateTo(state.currentView || 'home');
+      });
       showToast('Supabase configuration saved! Connected to Mumbai instance.');
       closeSupabaseModal();
     }

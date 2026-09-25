@@ -2911,14 +2911,25 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       if (featuredBadge) featuredBadge.style.display = agency.is_featured ? 'inline-flex' : 'none';
 
       // Social Links (Website, Instagram, LinkedIn, WhatsApp wa.me)
+      // Hide a button entirely when we don't have a real link yet, rather
+      // than pointing it at '#' (which looks broken to visitors).
       const webBtn = document.getElementById('profile-website-btn');
-      if (webBtn) webBtn.href = agency.website_url || '#';
+      if (webBtn) {
+        webBtn.style.display = agency.website_url ? 'inline-flex' : 'none';
+        webBtn.href = agency.website_url || '#';
+      }
 
       const igBtn = document.getElementById('profile-instagram-btn');
-      if (igBtn) igBtn.href = agency.instagram_url || '#';
+      if (igBtn) {
+        igBtn.style.display = agency.instagram_url ? 'inline-flex' : 'none';
+        igBtn.href = agency.instagram_url || '#';
+      }
 
       const liBtn = document.getElementById('profile-linkedin-btn');
-      if (liBtn) liBtn.href = agency.linkedin_url || '#';
+      if (liBtn) {
+        liBtn.style.display = agency.linkedin_url ? 'inline-flex' : 'none';
+        liBtn.href = agency.linkedin_url || '#';
+      }
 
       // WhatsApp link with wa.me and pre-filled inquiry text
       const waBtn = document.getElementById('profile-whatsapp-btn');

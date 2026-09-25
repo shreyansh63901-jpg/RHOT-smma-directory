@@ -1,0 +1,1 @@
+# RHOT-smma-directory

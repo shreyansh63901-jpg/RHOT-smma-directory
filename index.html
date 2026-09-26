@@ -3120,17 +3120,23 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       const instagram = document.getElementById('reg-instagram').value;
       const whatsapp = document.getElementById('reg-whatsapp').value;
       const email = document.getElementById('reg-email').value;
-      const startingPrice = parseFloat(document.getElementById('reg-price-min').value);
+      const startingPriceRaw = parseFloat(document.getElementById('reg-price-min').value);
+      const startingPrice = isNaN(startingPriceRaw) ? null : startingPriceRaw;
       const teamSize = document.getElementById('reg-team-size').value;
-      const foundedYear = parseInt(document.getElementById('reg-founded').value);
+      const foundedYearRaw = parseInt(document.getElementById('reg-founded').value);
+      const foundedYear = isNaN(foundedYearRaw) ? null : foundedYearRaw;
       const description = document.getElementById('reg-description').value;
 
       const selectedServices = Array.from(document.querySelectorAll('input[name="reg-services"]:checked')).map(cb => cb.value);
 
       const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.floor(Math.random() * 1000);
+      const agencyId = 'ag-' + Date.now();
 
-      const newAgency = {
-        id: 'ag-' + Date.now(),
+      // Only include columns that actually exist on public.agencies.
+      // (rank_score and services are computed/joined separately — sending
+      // them here would make Supabase reject the whole insert.)
+      const agencyPayload = {
+        id: agencyId,
         name,
         slug,
         logo_url: `https://placehold.co/200x200/1e3a8a/ffffff?text=${encodeURIComponent(name.slice(0, 4))}`,
@@ -3140,45 +3146,56 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
         city_id: cityId,
         address,
         starting_price: startingPrice,
-        price_max: startingPrice * 3,
+        price_max: startingPrice !== null ? startingPrice * 3 : null,
         team_size: teamSize,
         founded_year: foundedYear,
         languages: 'English, Hindi',
-        instagram_url: instagram,
-        website_url: website,
-        whatsapp,
-        phone: '+' + whatsapp,
-        email,
+        instagram_url: instagram || null,
+        website_url: website || null,
+        whatsapp: whatsapp || null,
+        phone: whatsapp ? ('+' + whatsapp) : null,
+        email: email || null,
         is_verified: false,
         is_featured: false,
-        avg_rating: 5.0,
-        review_count: 1,
-        status: 'draft', // Critical requirement: saved as draft
-        services: selectedServices,
-        created_at: new Date().toISOString()
+        avg_rating: 0,
+        review_count: 0,
+        status: 'draft' // Critical requirement: saved as draft
       };
 
-      newAgency.rank_score = computeAgencyRankScore(newAgency);
-
-      // Append to local state
-      state.agencies.push(newAgency);
-
-      // Attempt Supabase insert
-      if (supabaseClient) {
-        try {
-          const { error } = await supabaseClient.from('agencies').insert([newAgency]);
-          if (error) console.warn('Supabase draft agency insert:', error);
-        } catch (err) {
-          console.warn('Supabase insert draft error:', err);
-        }
+      if (!supabaseClient) {
+        showToast('Cannot submit right now — the site is not connected to the database. Please try again shortly.', 'info');
+        return;
       }
 
-      showToast(`Success! "${name}" submitted for editorial review with status = 'draft'.`);
-      e.target.reset();
+      try {
+        const { error: agencyError } = await supabaseClient.from('agencies').insert([agencyPayload]);
+        if (agencyError) {
+          console.error('Agency submission failed:', agencyError);
+          showToast('Something went wrong submitting your listing. Please try again or contact us.', 'info');
+          return;
+        }
 
-      setTimeout(() => {
-        navigateTo('home');
-      }, 2000);
+        if (selectedServices.length) {
+          const serviceRows = selectedServices.map(sid => ({ agency_id: agencyId, service_id: sid }));
+          const { error: servicesError } = await supabaseClient.from('agency_services').insert(serviceRows);
+          if (servicesError) console.warn('Agency services link failed (agency itself was saved):', servicesError);
+        }
+
+        // Reflect locally for this session's UI (not persisted from here — comes from the DB on next load)
+        const localAgency = { ...agencyPayload, services: selectedServices, industries: [] };
+        localAgency.rank_score = computeAgencyRankScore(localAgency);
+        state.agencies.push(localAgency);
+
+        showToast(`Success! "${name}" submitted for editorial review with status = 'draft'.`);
+        e.target.reset();
+
+        setTimeout(() => {
+          navigateTo('home');
+        }, 2000);
+      } catch (err) {
+        console.error('Unexpected error submitting agency:', err);
+        showToast('Something went wrong submitting your listing. Please try again.', 'info');
+      }
     }
 
     /**
@@ -3368,7 +3385,6 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       const comment = document.getElementById('rev-comment').value;
 
       const newReview = {
-        id: 'rev-' + Date.now(),
         agency_id: state.activeAgency.id,
         reviewer_name: reviewerName,
         reviewer_email: reviewerEmail,
@@ -3379,7 +3395,7 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
         created_at: new Date().toISOString().split('T')[0]
       };
 
-      state.reviews.unshift(newReview);
+      state.reviews.unshift({ id: 'local-' + Date.now(), ...newReview });
 
       // Recompute agency review count & average rating
       const agencyReviews = state.reviews.filter(r => r.agency_id === state.activeAgency.id);
@@ -3391,9 +3407,13 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
       // Try inserting to Supabase
       if (supabaseClient) {
         try {
-          await supabaseClient.from('reviews').insert([newReview]);
+          const { error } = await supabaseClient.from('reviews').insert([newReview]);
+          if (error) {
+            console.error('Review submission failed:', error);
+            showToast('Your review could not be saved right now. Please try again.', 'info');
+          }
         } catch (err) {
-          console.warn('Supabase review insert:', err);
+          console.error('Unexpected error submitting review:', err);
         }
       }
 

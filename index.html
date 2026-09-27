@@ -2931,12 +2931,20 @@ CREATE POLICY "Public insert draft agencies" ON public.agencies FOR INSERT WITH 
         liBtn.href = agency.linkedin_url || '#';
       }
 
-      // WhatsApp link with wa.me and pre-filled inquiry text
+      // WhatsApp link with wa.me and pre-filled inquiry text.
+      // Hide the button when this agency has no real number yet — falling
+      // back to a fixed demo number would send every visitor's message to
+      // the same (possibly real) phone regardless of which agency they meant.
       const waBtn = document.getElementById('profile-whatsapp-btn');
       if (waBtn) {
-        const cleanNumber = (agency.whatsapp || '919820011223').replace(/\D/g, '');
-        const message = encodeURIComponent(`Hi ${agency.name}, I found your agency profile on SMMA India and would like to discuss our monthly social media requirements.`);
-        waBtn.href = `https://wa.me/${cleanNumber}?text=${message}`;
+        if (agency.whatsapp) {
+          const cleanNumber = agency.whatsapp.replace(/\D/g, '');
+          const message = encodeURIComponent(`Hi ${agency.name}, I found your agency profile on SMMA India and would like to discuss our monthly social media requirements.`);
+          waBtn.href = `https://wa.me/${cleanNumber}?text=${message}`;
+          waBtn.style.display = 'inline-flex';
+        } else {
+          waBtn.style.display = 'none';
+        }
       }
 
       // About & Description
